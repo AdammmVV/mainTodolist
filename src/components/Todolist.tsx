@@ -1,13 +1,15 @@
-import {SuperButton} from "./SuperButton";
+import {SuperButton} from "./SuperButton/SuperButton";
 import {TaskTitle} from "./TaskTitle";
-import {SuperInput} from "./SuperInput";
-import React, {ChangeEvent} from "react";
+import {SuperInput} from "./SuperInput/SuperInput";
+import React from "react";
 import {FilterType, StateType} from "../App";
+import {SuperInputCheckBox} from "./SuperInputCheckBox/SuperInputCheckBox";
 
 
 type TodolistPropsType = {
     state: StateType[]
     title: string
+    filter: FilterType
     changeTitle: (value: string) => void
     addTask: () => void
     removeTask: (id: string) => void
@@ -19,6 +21,7 @@ export const Todolist: React.FC<TodolistPropsType> = (
     {
         state,
         title,
+        filter,
         changeTitle,
         addTask,
         removeTask,
@@ -26,6 +29,7 @@ export const Todolist: React.FC<TodolistPropsType> = (
         setCheckbox,
     }
 ) => {
+
 
     return (
         <div>
@@ -37,24 +41,35 @@ export const Todolist: React.FC<TodolistPropsType> = (
             <div>
                 <ul>
                     {state.map(t => {
-                        const onChangeInputCheckBox = (e:ChangeEvent<HTMLInputElement>) => {
-                            setCheckbox(e.currentTarget.checked, t.id)
+                            const onChangeInputCheckBox = (e:boolean) => {
+                                setCheckbox(e, t.id)
+                            }
+                            const removeTaskHandler = () => {
+                                removeTask(t.id)
+                            }
+                            return (
+                                <li key={t.id}>
+                                    <SuperInputCheckBox onChange={onChangeInputCheckBox} checked={t.isDone}/>
+                                    <span>{t.title}</span>
+                                    <SuperButton onClick={removeTaskHandler} name={'X'}/>
+                                </li>)
                         }
-                        return (
-                        <li key={t.id}>
-                        <input type="checkbox" onChange={onChangeInputCheckBox} checked={t.isDone}/>
-                        <span>{t.title}</span>
-                        <SuperButton onClick={() => removeTask(t.id)} name={'X'}/>
-                        </li>)}
                     )}
 
                 </ul>
             </div>
             <div>
-                <SuperButton onClick={() => tasksFilter('all')} name={'All'}/>
-                <SuperButton onClick={() => tasksFilter('active')} name={'Active'}/>
-                <SuperButton onClick={() => tasksFilter('completed')} name={'Completed'}/>
+                <SuperButton background={filter === 'all'}
+                             onClick={() => tasksFilter('all')}
+                             name={'All'}/>
+                <SuperButton background={filter === 'active'}
+                             onClick={() => tasksFilter('active')}
+                             name={'Active'}/>
+                <SuperButton background={filter === 'completed'}
+                             onClick={() => tasksFilter('completed')}
+                             name={'Completed'}/>
             </div>
         </div>
     );
 }
+
