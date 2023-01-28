@@ -63,7 +63,8 @@ export const App = () => {
                       addTask={addTask}
                       removeTask={removeTask}
                       tasksFilter={tasksFilter}
-                      setCheckbox={inputCheckbox}/>
+                      setCheckbox={inputCheckbox}
+                      filter={filter}/>
         </div>
     )
 }
