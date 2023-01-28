@@ -20,21 +20,16 @@ export const App = () => {
         {id: v1(), title: "Rest API", isDone: false},
         {id: v1(), title: "GraphQL", isDone: false},
     ]);
-    const [title, setTitle] = useState<string>('')
-    const [filter, setFilter] = useState<FilterType>('all')
 
-    const changeTitle = (e: string) => {
-        setTitle(e)
-    }
+    const [filter, setFilter] = useState<FilterType>('all')
 
     const inputCheckbox = (check: boolean, checkId:string) => {
         setState(state.map(el => el.id === checkId ? {...el,isDone: check} : {...el}))
     }
 
-    const addTask = () => {
-        let task = {id: v1(), title: title.trim(), isDone: false}
-        title.trim() && setState([task, ...state])
-        setTitle('')
+    const addTask = (title: string) => {
+        let task = {id: v1(), title: title, isDone: false}
+        setState([task, ...state])
     }
 
     const removeTask = (taskId:string) => {
@@ -58,8 +53,6 @@ export const App = () => {
     return (
         <div>
             <Todolist state={filterTasks}
-                      title={title}
-                      changeTitle={changeTitle}
                       addTask={addTask}
                       removeTask={removeTask}
                       tasksFilter={tasksFilter}
