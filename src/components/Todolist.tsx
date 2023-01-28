@@ -1,17 +1,15 @@
 import {SuperButton} from "./SuperButton/SuperButton";
 import {TaskTitle} from "./TaskTitle";
 import {SuperInput} from "./SuperInput/SuperInput";
-import React from "react";
+import React, {KeyboardEvent, useState} from "react";
 import {FilterType, StateType} from "../App";
 import {SuperInputCheckBox} from "./SuperInputCheckBox/SuperInputCheckBox";
 
 
 type TodolistPropsType = {
     state: StateType[]
-    title: string
     filter: FilterType
-    changeTitle: (value: string) => void
-    addTask: () => void
+    addTask: (title: string) => void
     removeTask: (id: string) => void
     tasksFilter: (filter: FilterType) => void
     setCheckbox: (check: boolean, checkId: string) => void
@@ -20,35 +18,57 @@ type TodolistPropsType = {
 export const Todolist: React.FC<TodolistPropsType> = (
     {
         state,
-        title,
         filter,
-        changeTitle,
         addTask,
         removeTask,
         tasksFilter,
         setCheckbox,
     }
 ) => {
+    const [title, setTitle] = useState<string>('')
+    const [error, setError] = useState<boolean>(false)
 
+    const changeTitle = (e: string) => {
+        setTitle(e)
+        setError(false)
+    }
+
+    const onKeyPressHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            onClickButtonHandler()
+        }
+    }
+
+    const onClickButtonHandler = () => {
+        if (title.trim() === '') {
+            setError(true)
+            setTitle('')
+        } else {
+            addTask(title.trim())
+            setTitle('')
+        }
+
+    }
 
     return (
         <div>
             <TaskTitle name={'Hello todoList Main'}/>
             <div>
-                <SuperInput onChange={changeTitle} title={title}/>
-                <SuperButton onClick={addTask} name={'+'}/>
+                <SuperInput onChange={changeTitle} onKeyDown={onKeyPressHandler} title={title}/>
+                <SuperButton onClick={onClickButtonHandler} name={'+'}/>
+                {error && <div style={{color: 'red'}}>Input cannot be empty!</div>}
             </div>
             <div>
                 <ul>
                     {state.map(t => {
-                            const onChangeInputCheckBox = (e:boolean) => {
+                            const onChangeInputCheckBox = (e: boolean) => {
                                 setCheckbox(e, t.id)
                             }
                             const removeTaskHandler = () => {
                                 removeTask(t.id)
                             }
                             return (
-                                <li key={t.id}>
+                                <li key={t.id} className={t.isDone ? 'done' : ''}>
                                     <SuperInputCheckBox onChange={onChangeInputCheckBox} checked={t.isDone}/>
                                     <span>{t.title}</span>
                                     <SuperButton onClick={removeTaskHandler} name={'X'}/>
