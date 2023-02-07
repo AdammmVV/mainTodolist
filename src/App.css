@@ -1,6 +1,13 @@
 .App {
-  text-align: center;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
 }
+
+.App > div {
+  margin-right: 50px;
+}
+
 
 .done {
   opacity: 0.5;
