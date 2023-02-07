@@ -1,24 +1,29 @@
 import {SuperButton} from "./SuperButton/SuperButton";
-import {TaskTitle} from "./TaskTitle";
 import {SuperInput} from "./SuperInput/SuperInput";
 import React, {KeyboardEvent, useState} from "react";
-import {FilterType, StateType} from "../App";
+import {FilterType, TasksType} from "../App";
 import {SuperInputCheckBox} from "./SuperInputCheckBox/SuperInputCheckBox";
 
 
 type TodolistPropsType = {
-    state: StateType[]
+    titleTodo: string
+    todoListId: string
+    tasks: TasksType[]
     filter: FilterType
-    addTask: (title: string) => void
-    removeTask: (id: string) => void
-    tasksFilter: (filter: FilterType) => void
-    setCheckbox: (check: boolean, checkId: string) => void
+    removeTodoList: (todoListId: string) => void
+    addTask: (todoListId: string, title: string) => void
+    removeTask: (todoListId: string, id: string) => void
+    tasksFilter: (todoListId: string, filter: FilterType) => void
+    setCheckbox: (todoListId: string, taskId: string, check: boolean) => void
 }
 
 export const Todolist: React.FC<TodolistPropsType> = (
     {
-        state,
+        titleTodo,
+        todoListId,
+        tasks,
         filter,
+        removeTodoList,
         addTask,
         removeTask,
         tasksFilter,
@@ -44,15 +49,21 @@ export const Todolist: React.FC<TodolistPropsType> = (
             setError(true)
             setTitle('')
         } else {
-            addTask(title.trim())
+            addTask(todoListId, title.trim())
             setTitle('')
         }
+    }
 
+    const removeTodoListHandler = () => {
+        removeTodoList(todoListId)
     }
 
     return (
         <div>
-            <TaskTitle name={'Hello todoList Main'}/>
+            <h3>
+                {titleTodo}
+                <SuperButton onClick={removeTodoListHandler} name={'X'}/>
+            </h3>
             <div>
                 <SuperInput onChange={changeTitle} onKeyDown={onKeyPressHandler} title={title}/>
                 <SuperButton onClick={onClickButtonHandler} name={'+'}/>
@@ -60,13 +71,11 @@ export const Todolist: React.FC<TodolistPropsType> = (
             </div>
             <div>
                 <ul>
-                    {state.map(t => {
-                            const onChangeInputCheckBox = (e: boolean) => {
-                                setCheckbox(e, t.id)
+                    {tasks.map(t => {
+                            const onChangeInputCheckBox = (isDone: boolean) => {
+                                setCheckbox(todoListId, t.id, isDone)
                             }
-                            const removeTaskHandler = () => {
-                                removeTask(t.id)
-                            }
+                            const removeTaskHandler = () => removeTask(todoListId, t.id)
                             return (
                                 <li key={t.id} className={t.isDone ? 'done' : ''}>
                                     <SuperInputCheckBox onChange={onChangeInputCheckBox} checked={t.isDone}/>
@@ -80,13 +89,13 @@ export const Todolist: React.FC<TodolistPropsType> = (
             </div>
             <div>
                 <SuperButton background={filter === 'all'}
-                             onClick={() => tasksFilter('all')}
+                             onClick={() => tasksFilter(todoListId, 'all')}
                              name={'All'}/>
                 <SuperButton background={filter === 'active'}
-                             onClick={() => tasksFilter('active')}
+                             onClick={() => tasksFilter(todoListId, 'active')}
                              name={'Active'}/>
                 <SuperButton background={filter === 'completed'}
-                             onClick={() => tasksFilter('completed')}
+                             onClick={() => tasksFilter(todoListId, 'completed')}
                              name={'Completed'}/>
             </div>
         </div>
