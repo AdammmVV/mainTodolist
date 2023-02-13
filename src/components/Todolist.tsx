@@ -1,9 +1,9 @@
 import {SuperButton} from "./SuperButton/SuperButton";
-import {SuperInput} from "./SuperInput/SuperInput";
-import React, {KeyboardEvent, useState} from "react";
+import React from "react";
 import {FilterType, TasksType} from "../App";
 import {SuperInputCheckBox} from "./SuperInputCheckBox/SuperInputCheckBox";
 import {SuperSpan} from "./SuperSpan";
+import {AddItemForm} from "./AddItemForm";
 
 
 type TodolistPropsType = {
@@ -16,7 +16,8 @@ type TodolistPropsType = {
     removeTask: (todoListId: string, id: string) => void
     tasksFilter: (todoListId: string, filter: FilterType) => void
     setCheckbox: (todoListId: string, taskId: string, check: boolean) => void
-    changedTask: (todoListId: string, taskId: string, newTitle: string)=>void
+    changedTask: (todoListId: string, taskId: string, newTitle: string) => void
+    changedTodoListTitle: (todolistId: string, newTitle: string) => void
 }
 
 export const Todolist: React.FC<TodolistPropsType> = (
@@ -31,50 +32,33 @@ export const Todolist: React.FC<TodolistPropsType> = (
         tasksFilter,
         setCheckbox,
         changedTask,
+        changedTodoListTitle,
     }
 ) => {
-    const [title, setTitle] = useState<string>('')
-    const [error, setError] = useState<boolean>(false)
 
-    const changeTitle = (e: string) => {
-        setTitle(e)
-        setError(false)
-    }
-
-    const onKeyPressHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            onClickButtonHandler()
-        }
-    }
-
-    const onClickButtonHandler = () => {
-        if (title.trim() === '') {
-            setError(true)
-            setTitle('')
-        } else {
-            addTask(todoListId, title.trim())
-            setTitle('')
-        }
+    const getNetNewTaskTitle = (title: string) => {
+        addTask(todoListId, title)
     }
 
     const removeTodoListHandler = () => {
         removeTodoList(todoListId)
     }
 
-    const GetNewTitleTask = (id: string, newTitle: string) => {
+    const getNewTitleTask = (id: string, newTitle: string) => {
         changedTask(todoListId, id, newTitle)
+    }
+    const getNewTitleTodoList = (newTitle: string) => {
+        changedTodoListTitle(todoListId, newTitle)
     }
 
     return (
         <div>
             <h3>
-                {titleTodo}
+                <SuperSpan title={titleTodo} callBack={getNewTitleTodoList}/>
                 <SuperButton onClick={removeTodoListHandler} name={'X'}/>
             </h3>
             <div>
-                <SuperInput onChange={changeTitle} onKeyDown={onKeyPressHandler} title={title}/>
-                <SuperButton onClick={onClickButtonHandler} name={'+'}/>
-                {error && <div style={{color: 'red'}}>Input cannot be empty!</div>}
+                <AddItemForm getTitle={getNetNewTaskTitle}/>
             </div>
             <div>
                 <ul>
@@ -83,7 +67,7 @@ export const Todolist: React.FC<TodolistPropsType> = (
                                 setCheckbox(todoListId, t.id, isDone)
                             }
                             const removeTaskHandler = () => removeTask(todoListId, t.id)
-                            const getNewTitle = (newTitle: string) => GetNewTitleTask(t.id, newTitle)
+                            const getNewTitle = (newTitle: string) => getNewTitleTask(t.id, newTitle)
                             return (
                                 <li key={t.id} className={t.isDone ? 'done' : ''}>
                                     <SuperInputCheckBox onChange={onChangeInputCheckBox} checked={t.isDone}/>
@@ -109,5 +93,3 @@ export const Todolist: React.FC<TodolistPropsType> = (
         </div>
     );
 }
-
-
