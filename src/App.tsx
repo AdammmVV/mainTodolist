@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {v1} from "uuid";
 import {Todolist} from "./components/Todolist";
+import {AddItemForm} from "./components/AddItemForm";
 
 type TodolistType = {
     id: string
@@ -44,6 +45,12 @@ export const App = () => {
 
     const removeTodoList = (todoListId: string) => {
         setTodoLists(todoLists.filter(todo => todo.id !== todoListId))
+    }
+
+    const addNewTodoList = (title: string) => {
+        let todoListId = v1()
+        setTodoLists([{id: todoListId, title: title, filter: "all"}, ...todoLists])
+        setTasks({[todoListId]: [], ...tasks})
     }
 
     const inputCheckbox = (todoListId: string, taskId: string, isDone: boolean ) => {
@@ -103,6 +110,9 @@ export const App = () => {
     })
     return (
         <div className={'App'}>
+            <div>
+                <AddItemForm getTitle={addNewTodoList}/>
+            </div>
             {mapTodolist}
         </div>
     )
