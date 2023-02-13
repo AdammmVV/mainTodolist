@@ -3,6 +3,7 @@ import {SuperInput} from "./SuperInput/SuperInput";
 import React, {KeyboardEvent, useState} from "react";
 import {FilterType, TasksType} from "../App";
 import {SuperInputCheckBox} from "./SuperInputCheckBox/SuperInputCheckBox";
+import {SuperSpan} from "./SuperSpan";
 
 
 type TodolistPropsType = {
@@ -15,6 +16,7 @@ type TodolistPropsType = {
     removeTask: (todoListId: string, id: string) => void
     tasksFilter: (todoListId: string, filter: FilterType) => void
     setCheckbox: (todoListId: string, taskId: string, check: boolean) => void
+    changedTask: (todoListId: string, taskId: string, newTitle: string)=>void
 }
 
 export const Todolist: React.FC<TodolistPropsType> = (
@@ -28,6 +30,7 @@ export const Todolist: React.FC<TodolistPropsType> = (
         removeTask,
         tasksFilter,
         setCheckbox,
+        changedTask,
     }
 ) => {
     const [title, setTitle] = useState<string>('')
@@ -58,6 +61,10 @@ export const Todolist: React.FC<TodolistPropsType> = (
         removeTodoList(todoListId)
     }
 
+    const GetNewTitleTask = (id: string, newTitle: string) => {
+        changedTask(todoListId, id, newTitle)
+    }
+
     return (
         <div>
             <h3>
@@ -76,10 +83,11 @@ export const Todolist: React.FC<TodolistPropsType> = (
                                 setCheckbox(todoListId, t.id, isDone)
                             }
                             const removeTaskHandler = () => removeTask(todoListId, t.id)
+                            const getNewTitle = (newTitle: string) => GetNewTitleTask(t.id, newTitle)
                             return (
                                 <li key={t.id} className={t.isDone ? 'done' : ''}>
                                     <SuperInputCheckBox onChange={onChangeInputCheckBox} checked={t.isDone}/>
-                                    <span>{t.title}</span>
+                                    <SuperSpan title={t.title} callBack={getNewTitle}/>
                                     <SuperButton onClick={removeTaskHandler} name={'X'}/>
                                 </li>)
                         }
@@ -101,4 +109,5 @@ export const Todolist: React.FC<TodolistPropsType> = (
         </div>
     );
 }
+
 
