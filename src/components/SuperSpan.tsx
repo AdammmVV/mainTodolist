@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 
 type SuperSpanPropsType = {
     title: string
@@ -16,6 +16,13 @@ export const SuperSpan: React.FC<SuperSpanPropsType> =
             setInputState(true)
         }
 
+        const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+            if(e.key === 'Enter') {
+                setInputState(false)
+                callBack(spanValue)
+            }
+        }
+
         const onBlurInputHandler = () => {
             setInputState(false)
             callBack(spanValue)
@@ -30,6 +37,7 @@ export const SuperSpan: React.FC<SuperSpanPropsType> =
                 ? <input value={spanValue}
                          onChange={onChangeInputHandler}
                          onBlur={onBlurInputHandler}
+                         onKeyDown={onKeyDownHandler}
                          autoFocus
                          type="text"/>
                 : <span onDoubleClick={onDoubleClickSpanHandler}>{spanValue}</span>
