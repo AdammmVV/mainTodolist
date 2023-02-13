@@ -67,6 +67,10 @@ export const App = () => {
         setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, title: newTitle} : t)})
     }
 
+    const changedTodoListTitle = (todolistId: string, newTitle: string) => {
+        setTodoLists(todoLists.map(t=> t.id === todolistId ? {...t, title: newTitle} : t))
+    }
+
     const changeStatusTasks = (todoListId: string, filter: FilterType) => {
 
         if (filter === "active") {
@@ -77,7 +81,7 @@ export const App = () => {
         }
         return tasks[todoListId]
     }
-    console.log(tasks)
+
     const mapTodolist = todoLists.map(todo => {
         let filterTasks = changeStatusTasks(todo.id, todo.filter)
         return (
@@ -93,6 +97,7 @@ export const App = () => {
                 tasksFilter={tasksFilter}
                 setCheckbox={inputCheckbox}
                 changedTask={changedTask}
+                changedTodoListTitle={changedTodoListTitle}
                 />
         )
     })
