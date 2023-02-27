@@ -7,7 +7,7 @@ type SuperSpanPropsType = {
 export const SuperSpan: React.FC<SuperSpanPropsType> =
     ({
          title,
-        callBack,
+         callBack,
      }) => {
         const [spanValue, setSpanValue] = useState<string>(title)
         const [inputState, setInputState] = useState(false)
@@ -17,18 +17,22 @@ export const SuperSpan: React.FC<SuperSpanPropsType> =
         }
 
         const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-            if(e.key === 'Enter') {
-                setInputState(false)
-                callBack(spanValue)
+            if (spanValue.trim() !== '') {
+                if (e.key === 'Enter') {
+                    setInputState(false)
+                    callBack(spanValue.trim())
+                }
             }
         }
 
         const onBlurInputHandler = () => {
-            setInputState(false)
-            callBack(spanValue)
+            if (spanValue.trim() !== '') {
+                setInputState(false)
+                callBack(spanValue.trim())
+            }
         }
 
-        const onChangeInputHandler = (e:ChangeEvent<HTMLInputElement>) => {
+        const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
             setSpanValue(e.currentTarget.value)
         }
 
