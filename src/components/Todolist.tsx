@@ -1,9 +1,10 @@
 import {SuperButton} from "./SuperButton/SuperButton";
 import React from "react";
-import {FilterType, TasksType} from "../App";
+import {FilterType} from "../App";
 import {SuperInputCheckBox} from "./SuperInputCheckBox/SuperInputCheckBox";
 import {SuperSpan} from "./SuperSpan";
 import {AddItemForm} from "./AddItemForm";
+import {TasksType} from "../redux/tasksReducer";
 
 
 type TodolistPropsType = {
