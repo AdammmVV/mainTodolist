@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useReducer, useState} from 'react';
 import './App.css';
 import {v1} from "uuid";
 import {Todolist} from "./components/Todolist";
@@ -15,13 +15,41 @@ import {
     addTaskAC,
     changedTaskAC,
     inputCheckboxAC,
-    removeTaskAC, removeTasksAC,
+    removeTaskAC,
+    removeTasksAC,
     tasksReducer
 } from "./redux/tasksReducer";
+import {
+    AppBar, Button,
+    Container,
+    createTheme,
+    CssBaseline,
+    Grid,
+    IconButton,
+    Paper,
+    ThemeProvider,
+    Typography,
+    Toolbar, Switch
+} from "@mui/material";
+import {amber, deepOrange} from "@mui/material/colors";
+import MenuIcon from '@mui/icons-material/Menu';
+
 
 export type FilterType = 'all' | 'active' | 'completed'
 
 export const App = () => {
+
+    const [dark, setDark] = useState(false)
+
+    const darkTheme = createTheme({
+        palette: {
+            primary: amber,
+            secondary: deepOrange,
+            mode: 'dark',
+        }
+    })
+
+    const waitTheme = createTheme()
 
     let todolistId1 = v1();
     let todolistId2 = v1();
@@ -59,7 +87,7 @@ export const App = () => {
         dispatchTasks(addNewTodoListAndTaskAC(todoListId))
     }
 
-    const inputCheckbox = (todoListId: string, taskId: string, isDone: boolean ) => {
+    const inputCheckbox = (todoListId: string, taskId: string, isDone: boolean) => {
         dispatchTasks(inputCheckboxAC(todoListId, taskId, isDone))
     }
 
@@ -97,29 +125,71 @@ export const App = () => {
     const mapTodolist = todoLists.map(todo => {
         let filterTasks = changeStatusTasks(todo.id, todo.filter)
         return (
-            <Todolist
-                key={todo.id}
-                todoListId={todo.id}
-                titleTodo={todo.title}
-                tasks={filterTasks}
-                filter={todo.filter}
-                removeTodoList={removeTodoList}
-                addTask={addTask}
-                removeTask={removeTask}
-                tasksFilter={tasksFilter}
-                setCheckbox={inputCheckbox}
-                changedTask={changedTask}
-                changedTodoListTitle={changedTodoListTitle}
-                />
+            <Grid item key={todo.id}>
+                <Paper elevation={3}
+                       sx={{
+                           margin: 3,
+                           maxWidth: 500,
+                           paddingBottom: 3,
+                           paddingTop: 0,
+                       }}>
+                    <Todolist
+                        todoListId={todo.id}
+                        titleTodo={todo.title}
+                        tasks={filterTasks}
+                        filter={todo.filter}
+                        removeTodoList={removeTodoList}
+                        addTask={addTask}
+                        removeTask={removeTask}
+                        tasksFilter={tasksFilter}
+                        setCheckbox={inputCheckbox}
+                        changedTask={changedTask}
+                        changedTodoListTitle={changedTodoListTitle}
+                    />
+                </Paper>
+            </Grid>
+
         )
     })
     return (
-        <div className={'App'}>
-            <div>
-                <AddItemForm getTitle={addNewTodoList}/>
-            </div>
-            {mapTodolist}
-        </div>
+        <ThemeProvider theme={dark ? darkTheme : waitTheme}>
+            <AppBar position="static" color={'primary'}>
+                <Toolbar variant={'dense'}>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        News
+                    </Typography>
+                        <Switch onChange={(e) => {setDark(e.currentTarget.checked)}} color={'secondary'}/>
+                    <Button color="inherit">Login</Button>
+                </Toolbar>
+            </AppBar>
+            <CssBaseline/>
+            <Container fixed sx={{
+                p:10,
+            }}>
+                <Grid container spacing={5} direction={'column'} alignItems={'center'} justifyItems={'center'}>
+                    <Grid item>
+                        <div>
+                            <AddItemForm getTitle={addNewTodoList} label={'Add Todo'}/>
+                        </div>
+                    </Grid>
+                    <Grid item>
+                        <Grid container >
+                            {mapTodolist}
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Container>
+        </ThemeProvider>
+
     )
 }
 
