@@ -1,21 +1,24 @@
 import React from "react";
-import s from './SuperButton.module.css'
+import {Button} from "@mui/material";
 
 type SuperButtonPropsType = {
     onClick: () => void
     name: string
-    background?: boolean
+    color?:  "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning" | undefined
+    variant?: "text" | "outlined" | "contained" | undefined
 }
 export const SuperButton: React.FC<SuperButtonPropsType> = (
     {
         onClick,
         name,
-        background
-    }
+        color,
+        variant,
+   }
 ) => {
-    let finalClassName = background ? s.buttonStyle : '';
-
     return (
-        <button className={finalClassName} onClick={onClick}>{name}</button>
+        <Button color={color}
+                variant={variant}
+                onClick={onClick}
+        >{name}</Button>
     )
 }

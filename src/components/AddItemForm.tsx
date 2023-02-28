@@ -43,6 +43,7 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = (props) => {
                        size={'small'}
                        color={'primary'}
                        error={error}
+                       value={title}
                        helperText={error ? 'Input cannot be empty!' : ''}/>
             <IconButton onClick={onClickButtonHandler} color={'primary'}>
                 <AddBoxSharpIcon />
