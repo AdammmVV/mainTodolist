@@ -1,16 +1,18 @@
-import React, {KeyboardEvent, useState} from "react";
-import {SuperInput} from "./SuperInput/SuperInput";
-import {SuperButton} from "./SuperButton/SuperButton";
+import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import {IconButton, TextField} from "@mui/material";
+import AddBoxSharpIcon from '@mui/icons-material/AddBoxSharp';
+
 
 type AddItemFormPropsType = {
     getTitle: (title: string) => void
+    label: string
 }
 export const AddItemForm: React.FC<AddItemFormPropsType> = (props) => {
-    const [title, setTitle] = useState<string>('')
-    const [error, setError] = useState<boolean>(false)
+    const [title, setTitle] = useState('')
+    const [error, setError] = useState(false)
 
-    const changeTitle = (e: string) => {
-        setTitle(e)
+    const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+        setTitle(e.currentTarget.value)
         setError(false)
     }
 
@@ -21,6 +23,7 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = (props) => {
     }
 
     const onClickButtonHandler = () => {
+        debugger
         if (title.trim() === '') {
             setError(true)
             setTitle('')
@@ -32,9 +35,18 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = (props) => {
 
     return (
         <>
-            <SuperInput onChange={changeTitle} onKeyDown={onKeyPressHandler} title={title}/>
-            <SuperButton onClick={onClickButtonHandler} name={'+'}/>
-            {error && <div style={{color: 'red'}}>Input cannot be empty!</div>}
+            <TextField onChange={changeTitle}
+                       onKeyDown={onKeyPressHandler}
+                       label={props.label}
+                       title={title}
+                       type={"text"}
+                       size={'small'}
+                       color={'primary'}
+                       error={error}
+                       helperText={error ? 'Input cannot be empty!' : ''}/>
+            <IconButton onClick={onClickButtonHandler} color={'primary'}>
+                <AddBoxSharpIcon />
+            </IconButton>
         </>
     )
 }
