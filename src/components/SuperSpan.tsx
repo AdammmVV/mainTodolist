@@ -1,4 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import {TextField} from "@mui/material";
 
 type SuperSpanPropsType = {
     title: string
@@ -38,12 +39,16 @@ export const SuperSpan: React.FC<SuperSpanPropsType> =
 
         return (
             inputState
-                ? <input value={spanValue}
-                         onChange={onChangeInputHandler}
-                         onBlur={onBlurInputHandler}
-                         onKeyDown={onKeyDownHandler}
-                         autoFocus
-                         type="text"/>
+                ? <TextField
+                    value={spanValue}
+                    onChange={onChangeInputHandler}
+                    onBlur={onBlurInputHandler}
+                    onKeyDown={onKeyDownHandler}
+                    autoFocus
+                    type="text"
+                    variant={'standard'}
+                    size={'small'}
+                />
                 : <span onDoubleClick={onDoubleClickSpanHandler}>{spanValue}</span>
         )
     }
