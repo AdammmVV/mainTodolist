@@ -1,0 +1,32 @@
+.todoListWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.tasksWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.taskWrapper {
+    width: 20em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 25px;
+}
+
+.done {
+    opacity: 0.5;
+}
+
+.buttonWrapper {
+    display: flex;
+    gap: 10px;
+}
+
+.backgroundTask {
+    background-color: rgba(128, 128, 128, 0.09);
+}
