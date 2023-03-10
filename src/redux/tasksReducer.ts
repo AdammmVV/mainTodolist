@@ -5,8 +5,7 @@ export type TasksType = {
     title: string
     isDone: boolean
 }
-
-type TasksStateType = {
+export type TasksStateType = {
     [key: string]: TasksType[]
 }
 
@@ -17,7 +16,7 @@ type MainActionType = InputCheckboxAT
     | AddNewTodoListAndTaskAT
     | RemoveTasksAT
 
-export const tasksReducer = (state: TasksStateType, action: MainActionType): TasksStateType => {
+export const tasksReducer = (state: TasksStateType = {}, action: MainActionType): TasksStateType => {
     switch (action.type) {
         case "ADD-TASK":
             const task: TasksType = {id: v1(), title: action.payload.newTitle, isDone: false}
