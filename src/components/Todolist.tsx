@@ -1,24 +1,16 @@
 import {SuperButton} from "./SuperButton/SuperButton";
 import s from './Todolist.module.css'
-import React, {ChangeEvent} from "react";
+import React, {memo, useCallback} from "react";
 import {FilterType} from "../App";
 import {SuperSpan} from "./SuperSpan";
 import {AddItemForm} from "./AddItemForm";
-import {
-    addTaskAC,
-    changedTaskAC,
-    inputCheckboxAC,
-    removeTaskAC,
-    removeTasksAC,
-    TasksStateType,
-    TasksType
-} from "../redux/tasksReducer";
-import {Checkbox, IconButton} from '@mui/material';
-import DeleteForeverSharpIcon from '@mui/icons-material/DeleteForeverSharp';
+import {addTaskAC, removeTasksAC, TasksStateType, TasksType} from "../redux/tasksReducer";
+import {IconButton} from '@mui/material';
 import HighlightOffSharpIcon from '@mui/icons-material/HighlightOffSharp';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../redux/store";
 import {changedTodoListTitleAC, removeTodoListAC, tasksFilterAC} from "../redux/todoListReducer";
+import {Task} from "./Task";
 
 type TodolistPropsType = {
     titleTodo: string
@@ -26,7 +18,7 @@ type TodolistPropsType = {
     filter: FilterType
 }
 
-export const Todolist: React.FC<TodolistPropsType> = (
+export const Todolist: React.FC<TodolistPropsType> = memo((
     {
         titleTodo,
         todoListId,
@@ -37,22 +29,18 @@ export const Todolist: React.FC<TodolistPropsType> = (
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
     const dispatch = useDispatch()
 
-    const addTasks = (title: string) => {
+    const addTasks = useCallback((title: string) => {
         dispatch(addTaskAC(todoListId, title))
-    }
+    }, [dispatch, todoListId])
 
     const removeTodoListHandler = () => {
         dispatch(removeTasksAC(todoListId))
         dispatch(removeTodoListAC(todoListId))
     }
 
-    const getNewTitleTask = (taskId: string, newTitle: string) => {
-        dispatch(changedTaskAC(todoListId, taskId, newTitle))
-    }
-
-    const getNewTitleTodoList = (newTitle: string) => {
+    const getNewTitleTodoList = useCallback((newTitle: string) => {
         dispatch(changedTodoListTitleAC(todoListId, newTitle))
-    }
+    }, [dispatch, todoListId])
 
     const changeStatusTasks = (todoListId: string, filter: FilterType): TasksType[] => {
 
@@ -65,6 +53,10 @@ export const Todolist: React.FC<TodolistPropsType> = (
         return tasks[todoListId]
     }
 
+    const taskFilterAll = useCallback(() => dispatch(tasksFilterAC(todoListId, 'all')), [dispatch, todoListId])
+    const taskFilterActive = useCallback(() => dispatch(tasksFilterAC(todoListId, 'active')), [dispatch, todoListId])
+    const taskFilterCompleted = useCallback(() => dispatch(tasksFilterAC(todoListId, 'completed')), [dispatch, todoListId])
+
     return (
         <div className={s.todoListWrapper}>
             <h3>
@@ -73,46 +65,29 @@ export const Todolist: React.FC<TodolistPropsType> = (
                     <HighlightOffSharpIcon/>
                 </IconButton>
             </h3>
-            <div>
-                <AddItemForm getTitle={addTasks} label={'Add task'}/>
-            </div>
-            <div>
-                <ul className={s.tasksWrapper}>
-                    {changeStatusTasks(todoListId, filter).map((t, i) => {
-                            const onChangeInputCheckBox = (e: ChangeEvent<HTMLInputElement>) => {
-                                dispatch(inputCheckboxAC(todoListId, t.id, e.currentTarget.checked))
-                            }
-                            const removeTaskHandler = () => dispatch(removeTaskAC(todoListId, t.id))
-                            const getNewTitle = (newTitle: string) => getNewTitleTask(t.id, newTitle)
-                            return (
-                                <li key={t.id}
-                                    className={`${t.isDone ? `${s.taskWrapper} ${s.done}` : s.taskWrapper} ${i % 2 === 0 ? s.backgroundTask : ''}`}>
-                                    <div>
-                                        <Checkbox onChange={onChangeInputCheckBox} checked={t.isDone}/>
-                                        <SuperSpan title={t.title} callBack={getNewTitle}/>
-                                    </div>
-                                    <IconButton onClick={removeTaskHandler} color={"primary"}>
-                                        <DeleteForeverSharpIcon/>
-                                    </IconButton>
-                                </li>)
-                        }
-                    )}
-                </ul>
-            </div>
+            <AddItemForm getTitle={addTasks} label={'Add task'}/>
+            <ul className={s.tasksWrapper}>
+                {changeStatusTasks(todoListId, filter).map((t, i) => <Task
+                    key={t.id}
+                    task={t}
+                    todoListId={todoListId}
+                    i={i}/>)}
+            </ul>
             <div className={s.buttonWrapper}>
                 <SuperButton color={filter === 'all' ? 'secondary' : undefined}
                              variant={'contained'}
-                             onClick={() => dispatch(tasksFilterAC(todoListId, 'all'))}
+                             onClick={taskFilterAll}
                              name={'All'}/>
                 <SuperButton color={filter === 'active' ? 'secondary' : undefined}
                              variant={'contained'}
-                             onClick={() => dispatch(tasksFilterAC(todoListId, 'active'))}
+                             onClick={taskFilterActive}
                              name={'Active'}/>
                 <SuperButton color={filter === 'completed' ? 'secondary' : undefined}
                              variant={'contained'}
-                             onClick={() => dispatch(tasksFilterAC(todoListId, 'completed'))}
+                             onClick={taskFilterCompleted}
                              name={'Completed'}/>
             </div>
         </div>
     );
-}
+})
+
