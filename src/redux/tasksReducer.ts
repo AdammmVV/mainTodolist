@@ -26,7 +26,7 @@ export const tasksReducer = (state: TasksStateType = {}, action: MainActionType)
                 ...state,
                 [action.payload.todoListId]: state[action.payload.todoListId].filter(f => f.id !== action.payload.taskId)
             }
-        case "INPUT-CHECKBOX-CHEKED":
+        case "INPUT-CHECKBOX-CHECKED":
             return {
                 ...state,
                 [action.payload.todoListId]: state[action.payload.todoListId]
@@ -43,7 +43,7 @@ export const tasksReducer = (state: TasksStateType = {}, action: MainActionType)
 }
 
 type InputCheckboxAT = {
-    type: "INPUT-CHECKBOX-CHEKED",
+    type: "INPUT-CHECKBOX-CHECKED",
     payload: {
         todoListId: string
         taskId: string
@@ -53,7 +53,7 @@ type InputCheckboxAT = {
 
 export const inputCheckboxAC = (todoListId: string, taskId: string, isDone: boolean): InputCheckboxAT => {
     return {
-        type: "INPUT-CHECKBOX-CHEKED",
+        type: "INPUT-CHECKBOX-CHECKED",
         payload: {
             todoListId,
             taskId,
