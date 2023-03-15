@@ -7,18 +7,11 @@ type SuperButtonPropsType = {
     color?:  "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning" | undefined
     variant?: "text" | "outlined" | "contained" | undefined
 }
-export const SuperButton: React.FC<SuperButtonPropsType> = (
-    {
-        onClick,
-        name,
-        color,
-        variant,
-   }
-) => {
+export const SuperButton = React.memo(  (props: SuperButtonPropsType) => {
     return (
-        <Button color={color}
-                variant={variant}
-                onClick={onClick}
-        >{name}</Button>
+        <Button color={props.color}
+                variant={props.variant}
+                onClick={props.onClick}
+        >{props.name}</Button>
     )
-}
+})
