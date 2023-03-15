@@ -1,11 +1,11 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from "react";
 import {TextField} from "@mui/material";
 
 type SuperSpanPropsType = {
     title: string
     callBack: (newTitle: string) => void
 }
-export const SuperSpan: React.FC<SuperSpanPropsType> =
+export const SuperSpan: React.FC<SuperSpanPropsType> = memo(
     ({
          title,
          callBack,
@@ -51,4 +51,4 @@ export const SuperSpan: React.FC<SuperSpanPropsType> =
                 />
                 : <span onDoubleClick={onDoubleClickSpanHandler}>{spanValue}</span>
         )
-    }
+    })
