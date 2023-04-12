@@ -1,14 +1,14 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { SuperButton } from './SuperButton';
+import { MUIButton } from './MUIButton';
 
 export default {
   title: 'SuperButton',
-  component: SuperButton,
-} as ComponentMeta<typeof SuperButton>;
+  component: MUIButton,
+} as ComponentMeta<typeof MUIButton>;
 
-const Template: ComponentStory<typeof SuperButton> = (args) => <SuperButton {...args} />;
+const Template: ComponentStory<typeof MUIButton> = (args) => <MUIButton {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {
