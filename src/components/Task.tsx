@@ -2,9 +2,9 @@ import {changedTaskAC, inputCheckboxAC, removeTaskAC, TasksType} from "../redux/
 import {useDispatch} from "react-redux";
 import React, {ChangeEvent, memo, useCallback} from "react";
 import s from "./Todolist.module.css";
-import {Checkbox, IconButton} from "@mui/material";
+import {Checkbox} from "@mui/material";
 import {SuperSpan} from "./SuperSpan";
-import DeleteForeverSharpIcon from "@mui/icons-material/DeleteForeverSharp";
+import {IconMUIButton} from "./SuperButton/IconMUIButton";
 
 type TaskPropsType = {
     task: TasksType
@@ -19,7 +19,8 @@ export const Task = memo((props: TaskPropsType) => {
         dispatch(inputCheckboxAC(props.todoListId, props.task.id, e.currentTarget.checked))
     }
 
-    const removeTaskHandler = () => dispatch(removeTaskAC(props.todoListId, props.task.id))
+    const removeTaskHandler = useCallback(() =>
+        dispatch(removeTaskAC(props.todoListId, props.task.id)), [dispatch, props.todoListId, props.task.id])
 
     const getNewTitle = useCallback((newTitle: string) =>
         dispatch(changedTaskAC(props.todoListId, props.task.id, newTitle)), [dispatch, props.todoListId, props.task.id])
@@ -30,8 +31,6 @@ export const Task = memo((props: TaskPropsType) => {
                 <Checkbox onChange={onChangeInputCheckBox} checked={props.task.isDone}/>
                 <SuperSpan title={props.task.title} callBack={getNewTitle}/>
             </div>
-            <IconButton onClick={removeTaskHandler} color={"primary"}>
-                <DeleteForeverSharpIcon/>
-            </IconButton>
+            <IconMUIButton onClick={removeTaskHandler} color={"primary"}/>
         </li>)
 })
