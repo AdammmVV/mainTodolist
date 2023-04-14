@@ -4,10 +4,10 @@ import React, {memo, useCallback} from "react";
 import {FilterType} from "../App";
 import {SuperSpan} from "./SuperSpan";
 import {AddItemForm} from "./AddItemForm";
-import {addTaskAC, removeTasksAC, TasksType} from "../redux/tasksReducer";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../redux/store";
-import {changedTodoListTitleAC, removeTodoListAC, tasksFilterAC} from "../redux/todoListReducer";
+import {addTaskAC, TasksType} from "../redux/tasksReducer";
+import {useSelector} from "react-redux";
+import {AppRootStateType, useAppDispatch} from "../redux/store";
+import {removeTodoListAT, tasksFilterAC, updateTodolistAT} from "../redux/todoListReducer";
 import {Task} from "./Task";
 import {IconMUIButton} from "./SuperButton/IconMUIButton";
 
@@ -25,7 +25,7 @@ export const Todolist: React.FC<TodolistPropsType> = memo((
     }
 ) => {
     let tasks = useSelector<AppRootStateType, TasksType[]>(state => state.tasks[todoListId])
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     if (filter === "active") {
         tasks = tasks.filter(f => !f.isDone)
@@ -39,12 +39,11 @@ export const Todolist: React.FC<TodolistPropsType> = memo((
     }, [dispatch, todoListId])
 
     const removeTodoListHandler = useCallback(() => {
-        dispatch(removeTasksAC(todoListId))
-        dispatch(removeTodoListAC(todoListId))
+        dispatch(removeTodoListAT(todoListId))
     }, [dispatch, todoListId])
 
-    const getNewTitleTodoList = useCallback((newTitle: string) => {
-        dispatch(changedTodoListTitleAC(todoListId, newTitle))
+    const updateTodoList = useCallback((newTitle: string) => {
+        dispatch(updateTodolistAT(todoListId, newTitle))
     }, [dispatch, todoListId])
 
     const taskFilterAll = useCallback(() => dispatch(tasksFilterAC(todoListId, 'all')), [dispatch, todoListId])
@@ -54,12 +53,12 @@ export const Todolist: React.FC<TodolistPropsType> = memo((
     return (
         <div className={s.todoListWrapper}>
             <h3>
-                <SuperSpan title={titleTodo} callBack={getNewTitleTodoList}/>
+                <SuperSpan title={titleTodo} callBack={updateTodoList}/>
                 <IconMUIButton onClick={removeTodoListHandler} color={'primary'} size={'medium'}/>
             </h3>
             <AddItemForm getTitle={addTasks} label={'Add task'}/>
             <ul className={s.tasksWrapper}>
-                {tasks.map((t, i) => {
+                {tasks?.map((t, i) => {
                     return <Task key={t.id}
                                  task={t}
                                  todoListId={todoListId}
