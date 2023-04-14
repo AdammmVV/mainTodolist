@@ -1,14 +1,12 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import './App.css';
-import {v1} from "uuid";
 import {Todolist} from "./components/Todolist";
 import {AddItemForm} from "./components/AddItemForm";
-import {addNewTodoListAC, TodolistType} from "./redux/todoListReducer";
-import {addNewTodoListAndTaskAC} from "./redux/tasksReducer";
+import {createTodoListAT, getTodoListAT, TodolistType} from "./redux/todoListReducer";
 import {Container, createTheme, CssBaseline, Grid, Paper, ThemeProvider} from "@mui/material";
 import {amber, deepOrange} from "@mui/material/colors";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./redux/store";
+import {useSelector} from "react-redux";
+import {AppRootStateType, useAppDispatch} from "./redux/store";
 import {Header} from "./components/Header/Header";
 
 export type FilterType = 'all' | 'active' | 'completed'
@@ -28,12 +26,14 @@ export const App = () => {
     const waitTheme = createTheme()
 
     const todoLists = useSelector<AppRootStateType, TodolistType[]>(state => state.todoLists)
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(getTodoListAT())
+    }, [])
 
     const addNewTodoList = useCallback((title: string) => {
-        let todoListId = v1()
-        dispatch(addNewTodoListAC(todoListId, title))
-        dispatch(addNewTodoListAndTaskAC(todoListId))
+        dispatch(createTodoListAT(title))
     }, [dispatch])
 
     const mapTodolist = todoLists.map(todo => {
