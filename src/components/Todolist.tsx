@@ -1,15 +1,16 @@
 import {MUIButton} from "./SuperButton/MUIButton";
 import s from './Todolist.module.css'
-import React, {memo, useCallback} from "react";
+import React, {memo, useCallback, useEffect} from "react";
 import {FilterType} from "../App";
 import {SuperSpan} from "./SuperSpan";
 import {AddItemForm} from "./AddItemForm";
-import {addTaskAC, TasksType} from "../redux/tasksReducer";
+import {createTaskAT, getTasksAT} from "../redux/tasksReducer";
 import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch} from "../redux/store";
 import {removeTodoListAT, tasksFilterAC, updateTodolistAT} from "../redux/todoListReducer";
 import {Task} from "./Task";
 import {IconMUIButton} from "./SuperButton/IconMUIButton";
+import {TaskDomainType} from "../api/api";
 
 type TodolistPropsType = {
     titleTodo: string
@@ -24,18 +25,22 @@ export const Todolist: React.FC<TodolistPropsType> = memo((
         filter,
     }
 ) => {
-    let tasks = useSelector<AppRootStateType, TasksType[]>(state => state.tasks[todoListId])
+    let tasks = useSelector<AppRootStateType, TaskDomainType[]>(state => state.tasks[todoListId])
     const dispatch = useAppDispatch()
 
+    useEffect(() => {
+        dispatch(getTasksAT(todoListId))
+    }, [dispatch, todoListId])
+
     if (filter === "active") {
-        tasks = tasks.filter(f => !f.isDone)
+        tasks = tasks.filter(f => f.status === 0)
     }
     if (filter === 'completed') {
-        tasks = tasks.filter(f => f.isDone)
+        tasks = tasks.filter(f => f.status !== 0)
     }
 
     const addTasks = useCallback((title: string) => {
-        dispatch(addTaskAC(todoListId, title))
+        dispatch(createTaskAT(todoListId, title))
     }, [dispatch, todoListId])
 
     const removeTodoListHandler = useCallback(() => {
