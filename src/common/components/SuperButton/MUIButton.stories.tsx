@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { MUIButton } from './MUIButton';
+import { MUIButton } from 'common/components/SuperButton/MUIButton';
 
 export default {
   title: 'SuperButton',

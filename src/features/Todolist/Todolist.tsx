@@ -1,16 +1,16 @@
-import {MUIButton} from "./SuperButton/MUIButton";
-import s from './Todolist.module.css'
+import {MUIButton} from "common/components/SuperButton/MUIButton";
+import s from 'features/Todolist/Todolist.module.css'
 import React, {memo, useCallback, useEffect} from "react";
-import {FilterType} from "../App";
-import {SuperSpan} from "./SuperSpan";
-import {AddItemForm} from "./AddItemForm";
-import {createTaskAT, getTasksAT} from "../redux/tasksReducer";
+import {FilterType} from "app/App";
+import {SuperSpan} from "common/components/SuperSpan/SuperSpan";
+import {AddItemForm} from "common/components/AddItemForm/AddItemForm";
+import {createTaskAT, getTasksAT} from "features/Todolist/Tasks/tasksReducer";
 import {useSelector} from "react-redux";
-import {AppRootStateType, useAppDispatch} from "../redux/store";
-import {removeTodoListAT, tasksFilterAC, updateTodolistAT} from "../redux/todoListReducer";
-import {Task} from "./Task";
-import {IconMUIButton} from "./SuperButton/IconMUIButton";
-import {TaskDomainType} from "../api/api";
+import {AppRootStateType, useAppDispatch} from "app/store";
+import {removeTodoListAT, tasksFilterAC, updateTodolistAT} from "features/Todolist/todoListReducer";
+import {Task} from "features/Todolist/Tasks/Task";
+import {IconMUIButton} from "common/components/SuperButton/IconMUIButton";
+import {TaskDomainType} from "api/api";
 
 type TodolistPropsType = {
     titleTodo: string

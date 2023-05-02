@@ -1,7 +1,7 @@
-import {FilterType} from "../App";
+import {FilterType} from "app/App";
 import {Dispatch} from "redux";
-import {todoListApi, TodoListDomainType} from "../api/api";
-import {createTasksAC} from "./tasksReducer";
+import {todoListApi, TodoListDomainType} from "api/api";
+import {createTasksAC} from "features/Todolist/Tasks/tasksReducer";
 
 // Reducer
 export const todoListReducer = (state: TodolistType[] = [], action: MainActionType): TodolistType[] => {

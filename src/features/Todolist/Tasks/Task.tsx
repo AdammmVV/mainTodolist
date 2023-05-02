@@ -1,11 +1,11 @@
-import {removeTaskAT, updateTaskAT} from "../redux/tasksReducer";
+import {removeTaskAT, updateTaskAT} from "features/Todolist/Tasks/tasksReducer";
 import React, {ChangeEvent, memo, useCallback} from "react";
-import s from "./Todolist.module.css";
+import s from "features/Todolist/Todolist.module.css";
 import {Checkbox} from "@mui/material";
-import {SuperSpan} from "./SuperSpan";
-import {IconMUIButton} from "./SuperButton/IconMUIButton";
-import {TaskDomainType, TaskStatuses} from "../api/api";
-import {useAppDispatch} from "../redux/store";
+import {SuperSpan} from "common/components/SuperSpan/SuperSpan";
+import {IconMUIButton} from "common/components/SuperButton/IconMUIButton";
+import {TaskDomainType, TaskStatuses} from "api/api";
+import {useAppDispatch} from "app/store";
 
 type TaskPropsType = {
     task: TaskDomainType

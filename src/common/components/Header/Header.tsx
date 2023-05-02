@@ -6,7 +6,6 @@ type HeaderPropsType = {
     setDark: (checked: boolean) => void
 }
 export const Header: React.FC<HeaderPropsType> = memo(({setDark}) => {
-    console.log('header')
     const switchOnChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setDark(e.currentTarget.checked)
 
     return (

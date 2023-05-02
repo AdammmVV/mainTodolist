@@ -1,6 +1,6 @@
-import {statusCode, TaskDomainType, TaskModuleType, tasksApi} from "../api/api";
+import {statusCode, TaskDomainType, TaskModuleType, tasksApi} from "api/api";
 import {Dispatch} from "redux";
-import {AppRootStateType} from "./store";
+import {AppRootStateType} from "app/store";
 
 // Reducer
 export const tasksReducer = (state: TasksStateType = {}, action: MainActionType): TasksStateType => {
