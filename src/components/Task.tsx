@@ -1,35 +1,36 @@
-import {changedTaskAC, inputCheckboxAC, removeTaskAC, TasksType} from "../redux/tasksReducer";
-import {useDispatch} from "react-redux";
+import {removeTaskAT, updateTaskAT} from "../redux/tasksReducer";
 import React, {ChangeEvent, memo, useCallback} from "react";
 import s from "./Todolist.module.css";
 import {Checkbox} from "@mui/material";
 import {SuperSpan} from "./SuperSpan";
 import {IconMUIButton} from "./SuperButton/IconMUIButton";
+import {TaskDomainType, TaskStatuses} from "../api/api";
+import {useAppDispatch} from "../redux/store";
 
 type TaskPropsType = {
-    task: TasksType
+    task: TaskDomainType
     todoListId: string
     i: number
 }
 export const Task = memo((props: TaskPropsType) => {
+    const dispatch = useAppDispatch()
 
-    const dispatch = useDispatch()
-
-    const onChangeInputCheckBox = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch(inputCheckboxAC(props.todoListId, props.task.id, e.currentTarget.checked))
+    const changeStatusCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
+        const status = e.currentTarget.checked ? TaskStatuses.New : TaskStatuses.Completed
+        dispatch(updateTaskAT(props.todoListId, props.task.id, {status}))
     }
 
     const removeTaskHandler = useCallback(() =>
-        dispatch(removeTaskAC(props.todoListId, props.task.id)), [dispatch, props.todoListId, props.task.id])
+        dispatch(removeTaskAT(props.todoListId, props.task.id)), [dispatch, props.todoListId, props.task.id])
 
-    const getNewTitle = useCallback((newTitle: string) =>
-        dispatch(changedTaskAC(props.todoListId, props.task.id, newTitle)), [dispatch, props.todoListId, props.task.id])
+    const changeTitle = useCallback((title: string) =>
+        dispatch(updateTaskAT(props.todoListId, props.task.id, {title})), [dispatch, props.todoListId, props.task.id])
 
     return (
-        <li className={`${props.task.isDone ? `${s.taskWrapper} ${s.done}` : s.taskWrapper} ${props.i % 2 === 0 ? s.backgroundTask : ''}`}>
+        <li className={`${props.task.status ? `${s.taskWrapper} ${s.done}` : s.taskWrapper} ${props.i % 2 === 0 ? s.backgroundTask : ''}`}>
             <div>
-                <Checkbox onChange={onChangeInputCheckBox} checked={props.task.isDone}/>
-                <SuperSpan title={props.task.title} callBack={getNewTitle}/>
+                <Checkbox onChange={changeStatusCheckbox} checked={props.task.status === 0}/>
+                <SuperSpan title={props.task.title} callBack={changeTitle}/>
             </div>
             <IconMUIButton onClick={removeTaskHandler} color={"primary"}/>
         </li>)
