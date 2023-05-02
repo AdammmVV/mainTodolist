@@ -34,11 +34,11 @@ export const tasksApi = {
             .then(res => res.data)
     },
     createTask(todoListId: string, title: string) {
-        return instance.post<null, CommonResponseTaskType<TaskDomainType>, {title: string}>(`todo-lists/${todoListId}/tasks`, {title})
+        return instance.post<{}, AxiosResponse<CommonResponseTaskType<TaskDomainType>>, {title: string}>(`todo-lists/${todoListId}/tasks`, {title})
             .then(res => res.data)
     },
     updateTask(todoListId: string, taskId: string, module: TaskModuleType) {
-        return instance.put<null, CommonResponseTaskType<TaskDomainType>, TaskModuleType>(`todo-lists/${todoListId}/tasks/${taskId}`, module)
+        return instance.put<{}, AxiosResponse<CommonResponseTaskType<TaskDomainType>>, TaskModuleType>(`todo-lists/${todoListId}/tasks/${taskId}`, module)
             .then(res => res.data)
     },
     removeTask(todoListId: string, taskId: string) {
@@ -66,8 +66,7 @@ type ResponseChangeTodoListType = {
     fieldsErrors: string[]
     data: {}
 }
-
-type TaskDomainType = {
+export type TaskDomainType = {
     description: string
     title: string
     completed: boolean
@@ -84,19 +83,32 @@ type CommonResponseTaskType<T = {}> ={
     resultCode: number
     messages: string []
     fieldsErrors: string[]
-    data: T
+    data: {
+        item: T
+    }
 }
 type ResponseTasksType = {
     totalCount: number
     error: string
     items: TaskDomainType[]
 }
-type TaskModuleType = {
-    title: string
-    description: string
-    completed: boolean
-    status: number
-    priority: number
-    startDate: string
-    deadline: string
+export type TaskModuleType = {
+    title?: string
+    description?: string
+    completed?: boolean
+    status?: number
+    priority?: number
+    startDate?: string
+    deadline?: string
+}
+export enum statusCode {
+    Ok = 0,
+    error = 1,
+    captcha = 10
+}
+export enum TaskStatuses {
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3
 }
