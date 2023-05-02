@@ -6,14 +6,13 @@ const instance = axios.create({
 })
 
 // API TodoList
-
 export const todoListApi = {
     getTodoLists() {
         return instance.get<TodoListDomainType[]>('todo-lists')
             .then(res => res.data)
     },
     createTodoList(title: string) {
-        return instance.post<null, AxiosResponse<CommonResponseType<{ item: TodoListDomainType }>>, {title: string}>('todo-lists', {title})
+        return instance.post<null, AxiosResponse<CommonResponseType<{ item: TodoListDomainType }>>, { title: string }>('todo-lists', {title})
             .then(res => res.data)
     },
     removeTodoList(todoListId: string) {
@@ -21,20 +20,19 @@ export const todoListApi = {
             .then(res => res.data)
     },
     updateTodolist(todoListId: string, title: string) {
-        return instance.put<null, ResponseChangeTodoListType, {title: string}>(`todo-lists/${todoListId}`, {title})
+        return instance.put<null, ResponseChangeTodoListType, { title: string }>(`todo-lists/${todoListId}`, {title})
             .then(res => res.data)
     }
 }
 
 // API Tasks
-
 export const tasksApi = {
     getTasks(todoListId: string) {
         return instance.get<ResponseTasksType>(`todo-lists/${todoListId}/tasks`)
             .then(res => res.data)
     },
     createTask(todoListId: string, title: string) {
-        return instance.post<{}, AxiosResponse<CommonResponseTaskType<TaskDomainType>>, {title: string}>(`todo-lists/${todoListId}/tasks`, {title})
+        return instance.post<{}, AxiosResponse<CommonResponseTaskType<TaskDomainType>>, { title: string }>(`todo-lists/${todoListId}/tasks`, {title})
             .then(res => res.data)
     },
     updateTask(todoListId: string, taskId: string, module: TaskModuleType) {
@@ -47,8 +45,29 @@ export const tasksApi = {
     }
 }
 
-// types
+//API Auth
+export const authApi = {
+    getMe() {
+        return instance.get<CommonResponseType<{ id: number, email: string, login: string}>>('auth/me')
+            .then(res => res.data)
+    },
+    logIn(data: DataRequestLoginType) {
+        return instance.post<{}, AxiosResponse<CommonResponseType<{userId: number}>>, DataRequestLoginType>('auth/login', data)
+            .then(res => res.data)
+    },
+    logout() {
+        return instance.delete<CommonResponseType>('auth/login')
+            .then(res => res.data)
+    }
+}
 
+// types
+export type DataRequestLoginType = {
+    email: string
+    password: string
+    rememberMe?: boolean
+    captcha?: boolean
+}
 export type TodoListDomainType = {
     id: string
     title: string
@@ -79,7 +98,7 @@ export type TaskDomainType = {
     order: number
     addedDate: string
 }
-type CommonResponseTaskType<T = {}> ={
+type CommonResponseTaskType<T = {}> = {
     resultCode: number
     messages: string []
     fieldsErrors: string[]
