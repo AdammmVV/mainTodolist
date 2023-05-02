@@ -2,7 +2,7 @@ import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch} from "app/store";
 import {createTodoListAT, TodolistType} from 'features/Todolist/todoListReducer';
 import React, {useCallback} from "react";
-import {Container, CssBaseline, Grid, Paper} from "@mui/material";
+import {CssBaseline, Grid, Paper} from "@mui/material";
 import {Todolist} from 'features/Todolist/Todolist';
 import {AddItemForm} from "common/components/AddItemForm/AddItemForm";
 
