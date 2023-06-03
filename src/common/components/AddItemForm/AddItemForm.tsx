@@ -4,9 +4,11 @@ import AddBoxSharpIcon from '@mui/icons-material/AddBoxSharp';
 
 type AddItemFormPropsType = {
   getTitle: (title: string) => void;
+  disabled?: boolean
   label: string;
 };
-export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
+export const AddItemForm: React.FC<AddItemFormPropsType> = memo(
+  ({disabled, label, getTitle}) => {
   const [title, setTitle] = useState('');
   const [error, setError] = useState(false);
 
@@ -26,7 +28,7 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
       setError(true);
       setTitle('');
     } else {
-      props.getTitle(title.trim());
+      getTitle(title.trim());
       setTitle('');
     }
   };
@@ -34,10 +36,11 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
   return (
     <Grid item>
       <TextField
+        disabled={disabled}
         value={title}
         onChange={changeTitle}
         onKeyDown={onKeyPressHandler}
-        label={props.label}
+        label={label}
         title={title}
         type={'text'}
         size={'small'}
@@ -45,7 +48,7 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
         error={error}
         helperText={error ? 'Input cannot be empty!' : ''}
       />
-      <IconButton onClick={onClickButtonHandler} color={'primary'}>
+      <IconButton disabled={disabled} onClick={onClickButtonHandler} color={'primary'}>
         <AddBoxSharpIcon />
       </IconButton>
     </Grid>
