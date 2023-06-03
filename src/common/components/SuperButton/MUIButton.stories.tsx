@@ -8,11 +8,13 @@ export default {
   component: MUIButton,
 } as ComponentMeta<typeof MUIButton>;
 
-const Template: ComponentStory<typeof MUIButton> = (args) => <MUIButton {...args} />;
+const Template: ComponentStory<typeof MUIButton> = (args) => (
+  <MUIButton {...args} />
+);
 
 export const Primary = Template.bind({});
 Primary.args = {
-      name: 'Button'
+  name: 'Button',
 };
 
 export const Secondary = Template.bind({});
@@ -21,11 +23,7 @@ Secondary.args = {
 };
 
 export const Large = Template.bind({});
-Large.args = {
-
-};
+Large.args = {};
 
 export const Small = Template.bind({});
-Small.args = {
-
-};
+Small.args = {};

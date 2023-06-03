@@ -8,11 +8,13 @@ export default {
   component: AddItemForm,
 } as ComponentMeta<typeof AddItemForm>;
 
-const Template: ComponentStory<typeof AddItemForm> = (args) => <AddItemForm {...args} />;
+const Template: ComponentStory<typeof AddItemForm> = (args) => (
+  <AddItemForm {...args} />
+);
 
 export const Primary = Template.bind({});
 Primary.args = {
-      // name: 'Button'
+  // name: 'Button'
 };
 
 export const Secondary = Template.bind({});
@@ -21,11 +23,7 @@ Secondary.args = {
 };
 
 export const Large = Template.bind({});
-Large.args = {
-
-};
+Large.args = {};
 
 export const Small = Template.bind({});
-Small.args = {
-
-};
+Small.args = {};
