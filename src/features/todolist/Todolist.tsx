@@ -14,18 +14,19 @@ import { useAppSelector } from 'common/hooks/useAppSelector';
 type TodolistPropsType = {
   titleTodo: string;
   todoListId: string;
+  entityStatus: boolean
   filter: FilterType;
 };
 
 export const Todolist: React.FC<TodolistPropsType> = memo(
-  ({ titleTodo, todoListId, filter }) => {
+  ({ titleTodo, todoListId, entityStatus, filter }) => {
     let tasks = useAppSelector((state) => state.tasks[todoListId]);
     const isAuth = useAppSelector(state => state.auth.isAuth)
-    // const isLoading = useAppSelector( state => state.app.isLoading)
     const dispatch = useAppDispatch();
 
+    console.log(entityStatus);
+
     useEffect(() => {
-      debugger
       if (!isAuth) return
       dispatch(getTasksAT(todoListId));
     }, [dispatch, todoListId, isAuth]);
@@ -73,13 +74,13 @@ export const Todolist: React.FC<TodolistPropsType> = memo(
         <h3>
           <SuperSpan title={titleTodo} callBack={updateTodoList} />
           <IconMUIButton
-            disabled={true}
+            disabled={entityStatus}
             onClick={removeTodoListHandler}
             color={'primary'}
             size={'medium'}
           />
         </h3>
-        <AddItemForm getTitle={addTasks} label={'Add task'} />
+        <AddItemForm getTitle={addTasks} label={'Add task'}  disabled={entityStatus}/>
         <ul className={s.tasksWrapper}>
           {tasks?.map((t, i) => {
             return <Task key={t.id} task={t} todoListId={todoListId} i={i} />;
