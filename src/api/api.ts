@@ -14,8 +14,7 @@ export const todoListApi = {
   },
   createTodoList(title: string) {
     return instance
-      .post<
-        null,
+      .post<{},
         AxiosResponse<CommonResponseType<{ item: TodoListDomainType }>>,
         { title: string }
       >('todo-lists', { title })
@@ -28,7 +27,7 @@ export const todoListApi = {
   },
   updateTodolist(todoListId: string, title: string) {
     return instance
-      .put<null, ResponseChangeTodoListType, { title: string }>(
+      .put<{}, AxiosResponse<ResponseChangeTodoListType>, { title: string }>(
         `todo-lists/${todoListId}`,
         { title }
       )
