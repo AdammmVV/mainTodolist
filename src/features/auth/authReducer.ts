@@ -1,6 +1,6 @@
 import { authApi, DataRequestLoginType } from 'api/api';
 import { Dispatch } from 'redux';
-import { setIsLoadingAC } from 'app/appReducer';
+import { setAppLoading } from 'app/appReducer';
 
 const initialState = {
   isAuth: false
@@ -28,33 +28,32 @@ export const isIsInitializedAC = (initialized: boolean) =>
 
 // Thunk creator
 export const getMeTC = () => (dispatch: Dispatch) => {
+  dispatch(setAppLoading(true));
   authApi.getMe()
     .then((res) => {
-      dispatch(setIsLoadingAC(false));
       if (res.resultCode === 0)
         dispatch(isIsInitializedAC(true));
     })
     .finally(() => {
-      dispatch(setIsLoadingAC(false));
+      dispatch(setAppLoading(false));
     });
 };
 
 export const logInTC = (data: DataRequestLoginType) => (dispatch: Dispatch) => {
-  dispatch(setIsLoadingAC(true));
+  dispatch(setAppLoading(true));
   authApi.logIn(data)
     .then((res) => {
-      dispatch(isIsInitializedAC(true));
       if (res.resultCode === 0) {
-
+        dispatch(isIsInitializedAC(true));
       }
     })
     .finally(() => {
-      dispatch(setIsLoadingAC(false));
+      dispatch(setAppLoading(false))
     });
 };
 
 export const logoutTC = () => (dispatch: Dispatch) => {
-  dispatch(setIsLoadingAC(true));
+  dispatch(setAppLoading(true))
   authApi.logout()
     .then((res) => {
       if (res.resultCode === 0) {
@@ -62,7 +61,7 @@ export const logoutTC = () => (dispatch: Dispatch) => {
       }
     })
     .finally(() => {
-    dispatch(setIsLoadingAC(false));
+      dispatch(setAppLoading(false))
   });
 };
 
