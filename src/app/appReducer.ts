@@ -1,4 +1,5 @@
 const initialState = {
+  isAppLoading: false,
   isLoading: false,
   theme: false,
   error: null as null | string
@@ -7,7 +8,9 @@ const initialState = {
 export const appReducer =
   (state: InitialStateType = initialState, action: MainActionsType): InitialStateType => {
   switch (action.type) {
-    case 'app/SET-IS-LOADING':
+    case 'app/SET-APP-LOADING':
+      return {...state, isAppLoading: action.payload.isAppLoading}
+    case 'app/SET-LOADING':
       return { ...state, isLoading: action.payload.isLoading };
     case 'app/SET-ERROR':
       return {...state, error: action.payload.error}
@@ -19,8 +22,15 @@ export const appReducer =
 };
 
 // actions
+export const setAppLoading = (isAppLoading: boolean) => ({
+  type: 'app/SET-APP-LOADING',
+  payload: {
+    isAppLoading
+  }
+} as const)
+
 export const setIsLoadingAC = (isLoading: boolean) => ({
-  type: 'app/SET-IS-LOADING',
+  type: 'app/SET-LOADING',
   payload: {
     isLoading
   }
@@ -46,4 +56,5 @@ type InitialStateType = typeof initialState;
 type MainActionsType =
   | ReturnType<typeof setIsLoadingAC>
   | ReturnType<typeof setErrorAC>
-  | ReturnType<typeof setDarkThemeAC>;
+  | ReturnType<typeof setDarkThemeAC>
+  | ReturnType<typeof setAppLoading>;
