@@ -15,8 +15,8 @@ export const todoListReducer = (state: TodolistType[] = [], action: MainActionTy
       return [{ ...action.payload.todoList, filter: 'all', entityStatus: false }, ...state];
     case 'CHANGED-TODO-LIST-TITLE':
       return state.map((tl) => tl.id === action.payload.todoListId
-          ? { ...tl, title: action.payload.newTitle }
-          : tl);
+        ? { ...tl, title: action.payload.newTitle }
+        : tl);
     case 'TASKS-FILTER':
       return state.map((tl) =>
         tl.id === action.payload.todoListId
@@ -89,27 +89,40 @@ export const getTodoListAT = () => (dispatch: Dispatch) => {
 };
 export const removeTodoListAT =
   (todoListId: string) => (dispatch: Dispatch) => {
-    dispatch(changeEntityStatusAC(todoListId, true))
+    dispatch(changeEntityStatusAC(todoListId, true));
+    dispatch(setIsLoadingAC(true));
     todoListApi.removeTodoList(todoListId)
       .then(() => {
-      dispatch(removeTodoListAC(todoListId));
-    })
+        dispatch(removeTodoListAC(todoListId));
+      })
       .finally(() => {
-        dispatch(changeEntityStatusAC(todoListId, false))
+        dispatch(changeEntityStatusAC(todoListId, false));
+        dispatch(setIsLoadingAC(false));
       });
   };
 export const createTodoListAT = (title: string) => (dispatch: Dispatch) => {
+  dispatch(setIsLoadingAC(true));
   todoListApi.createTodoList(title).then((res) => {
-    dispatch(createTodoListAC(res.data.item));
-    dispatch(createTasksAC(res.data.item.id));
+    if (res.resultCode === 0) {
+      dispatch(createTodoListAC(res.data.item));
+      dispatch(createTasksAC(res.data.item.id));
+    }
+  }).finally(() => {
+    dispatch(setIsLoadingAC(false));
   });
 };
 export const updateTodolistAT =
   (todoListId: string, title: string) => (dispatch: Dispatch) => {
-    todoListApi.updateTodolist(todoListId, title).then((res) => {
-      console.log(res);
-      dispatch(changedTodoListTitleAC(todoListId, title));
-    });
+    dispatch(setIsLoadingAC(true));
+    todoListApi.updateTodolist(todoListId, title)
+      .then((res) => {
+        if (res.resultCode === 0) {
+          dispatch(changedTodoListTitleAC(todoListId, title));
+        }
+      })
+      .finally(() => {
+        dispatch(setIsLoadingAC(false));
+      });
   };
 
 // Types
