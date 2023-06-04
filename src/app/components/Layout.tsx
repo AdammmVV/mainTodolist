@@ -8,12 +8,14 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { paths } from "common/constants/paths";
 import { Loader } from 'common/components/Loader/Loader';
 import { Header } from 'common/components/Header/Header';
+import LinearProgress from '@mui/material/LinearProgress/LinearProgress';
 
 
 export const Layout = () => {
   const dispatch = useAppDispatch();
   const isAuth = useAppSelector((state) => state.auth.isAuth);
   const isLoading = useAppSelector(state => state.app.isLoading)
+  const isAppLoading = useAppSelector( state => state.app.isAppLoading)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -30,8 +32,9 @@ export const Layout = () => {
   return (
     <>
       <Header />
+      { isLoading && <LinearProgress />}
       <Container fixed sx={{ p: 10 }}>
-        {isLoading ? <Loader /> : <Outlet />}
+        {isAppLoading ? <Loader /> : <Outlet />}
       </Container>
     </>
   );
