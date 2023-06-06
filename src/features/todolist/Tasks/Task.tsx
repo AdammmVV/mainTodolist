@@ -13,7 +13,6 @@ import { useAppDispatch } from 'common/hooks/useAppDispatch';
 type TaskPropsType = {
   task: TaskDomainType;
   todoListId: string;
-  i: number;
 };
 export const Task = memo((props: TaskPropsType) => {
   const dispatch = useAppDispatch();
@@ -36,12 +35,10 @@ export const Task = memo((props: TaskPropsType) => {
     [dispatch, props.todoListId, props.task.id]
   );
 
+  const finalStyle = `${props.task.status ? `${s.taskWrapper} ${s.done}` : s.taskWrapper}`
+
   return (
-    <li
-      className={`${
-        props.task.status ? `${s.taskWrapper} ${s.done}` : s.taskWrapper
-      } ${props.i % 2 === 0 ? s.backgroundTask : ''}`}
-    >
+    <li className={finalStyle}>
       <div>
         <Checkbox
           onChange={changeStatusCheckbox}
@@ -49,7 +46,7 @@ export const Task = memo((props: TaskPropsType) => {
         />
         <SuperSpan title={props.task.title} callBack={changeTitle} />
       </div>
-      <IconMUIButton onClick={removeTaskHandler} color={'primary'} disabled={true}/>
+      <IconMUIButton onClick={removeTaskHandler} color={'primary'}/>
     </li>
   );
 });
