@@ -4,7 +4,7 @@ import DeleteForeverSharpIcon from '@mui/icons-material/DeleteForeverSharp';
 
 type IconButtonPropsType = {
   onClick: () => void;
-  disabled: boolean
+  disabled?: boolean
   color:
     | 'primary'
     | 'inherit'
