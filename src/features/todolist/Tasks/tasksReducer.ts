@@ -1,6 +1,7 @@
 import { statusCode, TaskDomainType, TaskModuleType, tasksApi } from 'api/api';
 import { Dispatch } from 'redux';
 import { AppRootStateType } from 'app/store';
+import { changeEntityStatusAC } from 'features/todolist/todoListReducer';
 
 // Reducer
 export const tasksReducer = (
@@ -14,14 +15,14 @@ export const tasksReducer = (
       const todoListId = action.payload.taskModel.todoListId;
       return {
         ...state,
-        [todoListId]: [action.payload.taskModel, ...state[todoListId]],
+        [todoListId]: [action.payload.taskModel, ...state[todoListId]]
       };
     case 'REMOVE-TASK':
       return {
         ...state,
         [action.payload.todoListId]: state[action.payload.todoListId].filter(
           (f) => f.id !== action.payload.taskId
-        ),
+        )
       };
     case 'UPDATE-TASK':
       return {
@@ -30,7 +31,7 @@ export const tasksReducer = (
           t.id === action.payload.taskId
             ? { ...t, ...action.payload.domainModel }
             : t
-        ),
+        )
       };
     case 'CREATE-TASKS':
       return { ...state, [action.payload.keyTasks]: [] };
@@ -52,8 +53,8 @@ export const removeTaskAC = (todoListId: string, taskId: string) =>
     type: 'REMOVE-TASK',
     payload: {
       todoListId,
-      taskId,
-    },
+      taskId
+    }
   } as const);
 export const createTasksAC = (keyTasks: string) =>
   ({ type: 'CREATE-TASKS', payload: { keyTasks } } as const);
@@ -66,7 +67,7 @@ export const updateTaskAC = (
 ) =>
   ({
     type: 'UPDATE-TASK',
-    payload: { domainModel, todoListId, taskId },
+    payload: { domainModel, todoListId, taskId }
   } as const);
 
 // Thunk creator
@@ -81,51 +82,60 @@ export const getTasksAT = (todoListId: string) => (dispatch: Dispatch) => {
 };
 export const createTaskAT =
   (todoListId: string, title: string) => (dispatch: Dispatch) => {
+    dispatch(changeEntityStatusAC(todoListId, true));
     tasksApi.createTask(todoListId, title).then((res) => {
       if (res.resultCode === statusCode.Ok) {
         dispatch(createTaskAC(res.data.item));
       } else {
         alert(res.messages);
       }
-    });
+    })
+      .finally(() => {
+        dispatch(changeEntityStatusAC(todoListId, false));
+      });
   };
 export const removeTaskAT =
   (todoListId: string, taskId: string) => (dispatch: Dispatch) => {
+    dispatch(changeEntityStatusAC(todoListId, true));
     tasksApi.removeTask(todoListId, taskId).then((res) => {
-      console.log(res);
       if (res.resultCode === statusCode.Ok) {
         dispatch(removeTaskAC(todoListId, taskId));
       } else {
         alert(res.messages);
       }
-    });
+    })
+      .finally(() => {
+        dispatch(changeEntityStatusAC(todoListId, false));
+      });
   };
 export const updateTaskAT =
   (todoListId: string, taskId: string, domainModel: TaskModuleType) =>
-  (dispatch: Dispatch, getState: () => AppRootStateType) => {
-    const task = getState().tasks[todoListId].find((t) => t.id === taskId);
-    if (!task) {
-      console.warn('task not find');
-      return;
-    }
-    const taskModel: TaskModuleType = {
-      title: task.title,
-      completed: task.completed,
-      description: task.description,
-      deadline: task.deadline,
-      status: task.status,
-      priority: task.priority,
-      startDate: task.startDate,
-      ...domainModel,
-    };
-    tasksApi.updateTask(todoListId, taskId, taskModel).then((res) => {
-      if (res.resultCode === statusCode.Ok) {
-        dispatch(updateTaskAC(todoListId, taskId, taskModel));
-      } else {
-        alert(res.messages);
+    (dispatch: Dispatch, getState: () => AppRootStateType) => {
+      dispatch(changeEntityStatusAC(todoListId, true));
+      const task = getState().tasks[todoListId].find((t) => t.id === taskId);
+      if (!task) {
+        console.warn('task not find');
+        return;
       }
-    });
-  };
+      const taskModel: TaskModuleType = {
+        title: task.title,
+        completed: task.completed,
+        description: task.description,
+        deadline: task.deadline,
+        status: task.status,
+        priority: task.priority,
+        startDate: task.startDate,
+        ...domainModel
+      };
+      tasksApi.updateTask(todoListId, taskId, taskModel).then((res) => {
+        if (res.resultCode === statusCode.Ok) {
+          dispatch(updateTaskAC(todoListId, taskId, taskModel));
+        } else {
+          alert(res.messages);
+        }
+      })
+        .finally(() => dispatch(dispatch(changeEntityStatusAC(todoListId, false))));
+    };
 
 // Types
 export type TasksStateType = {
