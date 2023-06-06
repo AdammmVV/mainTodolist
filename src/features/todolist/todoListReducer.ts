@@ -3,6 +3,8 @@ import { Dispatch } from 'redux';
 import { todoListApi, TodoListDomainType } from 'api/api';
 import { createTasksAC } from 'features/todolist/Tasks/tasksReducer';
 import { setIsLoadingAC } from 'app/appReducer';
+import { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
 // Reducer
 export const todoListReducer = (state: TodolistType[] = [], action: MainActionType): TodolistType[] => {
@@ -89,14 +91,14 @@ export const getTodoListAT = () => (dispatch: Dispatch) => {
 };
 export const removeTodoListAT =
   (todoListId: string) => (dispatch: Dispatch) => {
-    dispatch(changeEntityStatusAC(todoListId, true));
+    dispatch(changeEntityStatusAC(todoListId, true))
     dispatch(setIsLoadingAC(true));
     todoListApi.removeTodoList(todoListId)
       .then(() => {
         dispatch(removeTodoListAC(todoListId));
       })
       .finally(() => {
-        dispatch(changeEntityStatusAC(todoListId, false));
+        dispatch(changeEntityStatusAC(todoListId, false))
         dispatch(setIsLoadingAC(false));
       });
   };
@@ -107,20 +109,32 @@ export const createTodoListAT = (title: string) => (dispatch: Dispatch) => {
       dispatch(createTodoListAC(res.data.item));
       dispatch(createTasksAC(res.data.item.id));
     }
-  }).finally(() => {
+  }).catch((e)=> {
+    if (e instanceof AxiosError) {
+      debugger
+      toast(e.message)
+    } else {
+      toast('some Error')
+    }
+  })
+    .finally(() => {
     dispatch(setIsLoadingAC(false));
   });
 };
 export const updateTodolistAT =
   (todoListId: string, title: string) => (dispatch: Dispatch) => {
+    dispatch(changeEntityStatusAC(todoListId, true));
     dispatch(setIsLoadingAC(true));
     todoListApi.updateTodolist(todoListId, title)
       .then((res) => {
         if (res.resultCode === 0) {
           dispatch(changedTodoListTitleAC(todoListId, title));
+        } else {
+
         }
       })
       .finally(() => {
+        dispatch(changeEntityStatusAC(todoListId, false));
         dispatch(setIsLoadingAC(false));
       });
   };
