@@ -1,31 +1,24 @@
-import {
-  applyMiddleware,
-  combineReducers,
-  compose,
-  legacy_createStore,
-} from 'redux';
-import { todoListReducer } from 'features/todolist/todoListReducer';
-import { tasksReducer } from 'features/todolist/Tasks/tasksReducer';
-import thunk from 'redux-thunk';
-import { authReducer } from 'features/auth/authReducer';
-import { appReducer } from 'app/appReducer';
+import { configureStore } from '@reduxjs/toolkit';
+import { appReducer } from 'app/app.slice';
+import { authReducer } from 'features/auth/auth.slice';
+import { tasksReducer } from 'features/todolist/Tasks/tasks.slice';
+import { todoListReducer } from 'features/todolist/todoList.slice';
 
-// Reducers
-const rootReducer = combineReducers({
-  app: appReducer,
-  todoLists: todoListReducer,
-  tasks: tasksReducer,
-  auth: authReducer,
-});
 
 // store
-export const store = legacy_createStore(
-  rootReducer,
-  compose(applyMiddleware(thunk))
-);
+export const store = configureStore({
+  reducer: {
+    app: appReducer,
+    auth: authReducer,
+    todoLists: todoListReducer,
+    tasks: tasksReducer,
+  }
+})
+
 
 // types
-export type AppRootStateType = ReturnType<typeof rootReducer>;
+export type AppDispatch = typeof store.dispatch
+export type AppRootStateType = ReturnType<typeof store.getState>;
 
 //@ts-ignore
 window.store = store;
