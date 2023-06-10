@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch } from 'common/hooks/useAppDispatch';
 import { useAppSelector } from 'common/hooks/useAppSelector';
-import { getMeTC } from "features/auth/authReducer";
-import { getTodoListAT } from 'features/todolist/todoListReducer';
 import Container from '@mui/material/Container/Container';
-import { Outlet, useNavigate } from "react-router-dom";
-import { paths } from "common/constants/paths";
+import { Outlet, useNavigate } from 'react-router-dom';
+import { paths } from 'common/constants/paths';
 import { LoaderApp } from 'common/components/Loaders/loaderApp/LoaderApp';
 import { Header } from 'common/components/Header/Header';
 import LinearProgress from '@mui/material/LinearProgress/LinearProgress';
-import { ToastContainer } from 'react-toastify/dist/components/ToastContainer';
+import { toast, ToastContainer } from 'react-toastify';
+import { authThunk } from 'features/auth/auth.slice';
+import { todoListThunk } from 'features/todolist/todoList.slice';
 
 
 export const Layout = () => {
@@ -17,18 +17,22 @@ export const Layout = () => {
   const isAuth = useAppSelector((state) => state.auth.isAuth);
   const isLoading = useAppSelector(state => state.app.isLoading)
   const isAppLoading = useAppSelector( state => state.app.isAppLoading)
+  const error = useAppSelector(state => state.app.error)
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(getMeTC())
+    dispatch(authThunk.getMe())
     if (!isAuth) {
       navigate(paths.LOGIN)
       return
     }
-    dispatch(getTodoListAT());
+    dispatch(todoListThunk.getTodoList());
     navigate(paths.MAIN)
   }, [isAuth, dispatch, navigate]);
 
+  if (error) {
+    toast.success(error)
+  }
 
   return (
     <>
@@ -47,10 +51,8 @@ export const Layout = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme="colored"
       />
-      {/* Same as */}
-      <ToastContainer />
     </>
   );
 };
