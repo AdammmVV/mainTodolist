@@ -1,25 +1,26 @@
-import { createTodoListAT } from 'features/todolist/todoListReducer';
 import React, { useCallback } from 'react';
 import { CssBaseline, Grid, Paper } from '@mui/material';
 import { Todolist } from 'features/todolist/Todolist';
 import { AddItemForm } from 'common/components/AddItemForm/AddItemForm';
 import { useAppDispatch } from 'common/hooks/useAppDispatch';
 import { useAppSelector } from 'common/hooks/useAppSelector';
+import { todoListThunk } from 'features/todolist/todoList.slice';
 
 export const TodolistList = () => {
   const todoLists = useAppSelector((state) => state.todoLists);
+  const isLoading = useAppSelector( state => state.app.isLoading)
   const dispatch = useAppDispatch();
 
   const addNewTodoList = useCallback(
     (title: string) => {
-      dispatch(createTodoListAT(title));
+      dispatch(todoListThunk.createTodoList({ title }));
     },
     [dispatch]
   );
 
   const mapTodolist = todoLists.map((todo) => {
     return (
-      <Grid item key={todo.id}>
+      <Grid item key={todo.id} >
         <Paper
           elevation={3}
           sx={{
@@ -27,6 +28,7 @@ export const TodolistList = () => {
             maxWidth: 500,
             paddingBottom: 3,
             paddingTop: 0,
+            position: 'relative'
           }}
         >
           <Todolist
@@ -49,7 +51,7 @@ export const TodolistList = () => {
         alignItems={'center'}
         justifyItems={'center'}
       >
-        <AddItemForm getTitle={addNewTodoList} label={'Add Todo'} />
+        <AddItemForm getTitle={addNewTodoList} label={'Add Todo'} disabled={isLoading} />
         <Grid item>
           <Grid container justifyItems={'center'}>
             {mapTodolist}
