@@ -8,8 +8,8 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useFormik } from 'formik';
-import { logInTC } from 'features/auth/authReducer';
 import { useAppDispatch } from 'common/hooks/useAppDispatch';
+import { authThunk } from 'features/auth/auth.slice';
 
 export const Login = () => {
   const dispatch = useAppDispatch();
@@ -35,8 +35,8 @@ export const Login = () => {
       }
       return errors;
     },
-    onSubmit: (values) => {
-      dispatch(logInTC(values));
+    onSubmit: (data) => {
+      dispatch(authThunk.logIn(data));
       formik.resetForm();
     },
   });
