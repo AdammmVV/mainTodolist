@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { FilterType } from 'app/App';
 
 const instance = axios.create({
   baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -106,6 +107,8 @@ export type TodoListDomainType = {
   title: string;
   addedDate: string;
   order: number;
+  filter: FilterType;
+  entityStatus: boolean;
 };
 type CommonResponseType<T = {}> = {
   resultCode: number;
@@ -153,7 +156,7 @@ export type TaskModuleType = {
   startDate?: string;
   deadline?: string;
 };
-export enum statusCode {
+export enum StatusCode {
   Ok = 0,
   error = 1,
   captcha = 10,
@@ -163,4 +166,11 @@ export enum TaskStatuses {
   InProgress = 1,
   Completed = 2,
   Draft = 3,
+}
+export enum TaskPriorities {
+  Low = 0,
+  Middle = 1,
+  Hi = 2,
+  Urgently = 3,
+  Later = 4
 }
