@@ -4,12 +4,14 @@ import React, { memo, useCallback, useEffect } from 'react';
 import { FilterType } from 'app/App';
 import { SuperSpan } from 'common/components/SuperSpan/SuperSpan';
 import { AddItemForm } from 'common/components/AddItemForm/AddItemForm';
-import { createTaskAT, getTasksAT } from 'features/todolist/Tasks/tasksReducer';
-import { removeTodoListAT, tasksFilterAC, updateTodolistAT } from 'features/todolist/todoListReducer';
 import { Task } from 'features/todolist/Tasks/Task';
 import { IconMUIButton } from 'common/components/SuperButton/IconMUIButton';
 import { useAppDispatch } from 'common/hooks/useAppDispatch';
 import { useAppSelector } from 'common/hooks/useAppSelector';
+import { Loader } from 'common/components/Loaders/loader/Loader';
+import { taskThunk } from 'features/todolist/Tasks/tasks.slice';
+import { todoListAction, todoListThunk } from 'features/todolist/todoList.slice';
+import { TaskStatuses } from 'api/api';
 
 type TodolistPropsType = {
   titleTodo: string;
@@ -24,53 +26,53 @@ export const Todolist: React.FC<TodolistPropsType> = memo(
     const isAuth = useAppSelector(state => state.auth.isAuth)
     const dispatch = useAppDispatch();
 
-    console.log(entityStatus);
-
     useEffect(() => {
       if (!isAuth) return
-      dispatch(getTasksAT(todoListId));
+      dispatch(taskThunk.getTasks({ todoListId }));
     }, [dispatch, todoListId, isAuth]);
 
     if (filter === 'active') {
-      tasks = tasks.filter((f) => f.status === 0);
+      tasks = tasks.filter((f) => f.status === TaskStatuses.New);
     }
     if (filter === 'completed') {
-      tasks = tasks.filter((f) => f.status !== 0);
+      tasks = tasks.filter((f) => f.status !== TaskStatuses.New);
     }
 
     const addTasks = useCallback(
       (title: string) => {
-        dispatch(createTaskAT(todoListId, title));
+        dispatch(taskThunk.createTask({ todoListId, title }));
       },
       [dispatch, todoListId]
     );
 
     const removeTodoListHandler = useCallback(() => {
-      dispatch(removeTodoListAT(todoListId));
+      dispatch(todoListThunk.removeTodoList({ todoListId }));
     }, [dispatch, todoListId]);
 
     const updateTodoList = useCallback(
-      (newTitle: string) => {
-        dispatch(updateTodolistAT(todoListId, newTitle));
+      (title: string) => {
+        dispatch(todoListThunk.updateTodolist({ todoListId, title }));
       },
       [dispatch, todoListId]
     );
 
     const taskFilterAll = useCallback(
-      () => dispatch(tasksFilterAC(todoListId, 'all')),
+      () => dispatch(todoListAction.setTasksFilter({ todoListId, filter: 'all' })),
       [dispatch, todoListId]
     );
     const taskFilterActive = useCallback(
-      () => dispatch(tasksFilterAC(todoListId, 'active')),
+      () => dispatch(todoListAction.setTasksFilter({ todoListId, filter:'active' })),
       [dispatch, todoListId]
     );
     const taskFilterCompleted = useCallback(
-      () => dispatch(tasksFilterAC(todoListId, 'completed')),
+      () => dispatch(todoListAction.setTasksFilter({ todoListId, filter: 'completed'})),
       [dispatch, todoListId]
     );
 
     return (
-      <div className={s.todoListWrapper}>
+      <>
+        {entityStatus && <Loader />}
+        <div className={s.todoListWrapper} style={entityStatus ? {pointerEvents: 'none', opacity: '0.5', cursor: 'wait'} : {}}>
         <h3>
           <SuperSpan title={titleTodo} callBack={updateTodoList} />
           <IconMUIButton
@@ -82,8 +84,8 @@ export const Todolist: React.FC<TodolistPropsType> = memo(
         </h3>
         <AddItemForm getTitle={addTasks} label={'Add task'}  disabled={entityStatus}/>
         <ul className={s.tasksWrapper}>
-          {tasks?.map((t, i) => {
-            return <Task key={t.id} task={t} todoListId={todoListId} i={i} />;
+          {tasks?.map(t => {
+            return <Task key={t.id} task={t} todoListId={todoListId}/>;
           })}
         </ul>
         <div className={s.buttonWrapper}>
@@ -107,6 +109,8 @@ export const Todolist: React.FC<TodolistPropsType> = memo(
           />
         </div>
       </div>
+    </>
+
     );
   }
 );
