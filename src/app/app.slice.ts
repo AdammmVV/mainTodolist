@@ -1,4 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  fulfilled,
+  fulfilledInitialized,
+  pending,
+  pendingInitialized,
+  rejectedWithValue
+} from 'common/constants/matchers';
 
 const initialState = {
   isAppLoading: false,
@@ -20,11 +27,29 @@ const slice = createSlice({
     setError: (state, action: PayloadAction<{ error: null | string }>) => {
       state.error = action.payload.error;
     },
-    setDarkTheme: (state, action: PayloadAction<{ theme: boolean }>) => {
+    setTheme: (state, action: PayloadAction<{ theme: boolean }>) => {
       state.theme = action.payload.theme;
     }
+  },
+  extraReducers: builder => {
+    builder
+      .addMatcher(pendingInitialized, state => {
+        state.isAppLoading = true;
+      })
+      .addMatcher(pending, state => {
+        state.isLoading = true;
+      })
+      .addMatcher(fulfilledInitialized, state => {
+        state.isAppLoading = false;
+      })
+      .addMatcher(fulfilled, state => {
+        state.isLoading = false;
+      })
+      .addMatcher(rejectedWithValue, (state, action) => {
+        state.error = action.payload as string;
+        state.isLoading = false;
+      })
   }
-
 });
 
 // export const appReducer =
@@ -73,8 +98,8 @@ const slice = createSlice({
 // } as const);
 // //thunks
 
-export const appReducer = slice.reducer
-export const appActions = slice.actions
+export const appReducer = slice.reducer;
+export const appActions = slice.actions;
 
 //types
 export type InitialAppStateType = typeof initialState;
