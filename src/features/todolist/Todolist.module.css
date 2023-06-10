@@ -11,6 +11,10 @@
   flex-direction: column;
 }
 
+.taskWrapper:nth-child(odd) {
+  background-color: rgba(128, 128, 128, 0.09);
+}
+
 .taskWrapper {
   width: 20em;
   display: flex;
@@ -28,6 +32,3 @@
   gap: 10px;
 }
 
-.backgroundTask {
-  background-color: rgba(128, 128, 128, 0.09);
-}
