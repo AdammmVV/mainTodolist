@@ -2,6 +2,7 @@ import { StatusCode, TaskDomainType, TaskModuleType, tasksApi } from 'api/api';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createAppAsyncThunk } from 'common/utils/createAppAsyncThunk';
 import { thunkCatch } from 'common/utils/thunk-catch';
+import { clearAppState } from 'common/actions/cleareAppState.action';
 
 const getTasks = createAppAsyncThunk<{ todoListId: string, tasks: TaskDomainType[] },
   { todoListId: string }>(
@@ -86,7 +87,7 @@ const slice = createSlice({
   name: 'tasks',
   initialState: {} as TasksStateType,
   reducers: {
-    clearTasksState: (state, action: PayloadAction<{ todoListId: string }>) => {
+    deleteTodoList: (state, action: PayloadAction<{ todoListId: string }>) => {
       delete state[action.payload.todoListId];
     },
     createTasksState: (state, action: PayloadAction<{ todoListId: string }>) => {
@@ -95,6 +96,9 @@ const slice = createSlice({
   },
   extraReducers: builder => {
     builder
+      .addCase(clearAppState, () => {
+        return {}
+      })
       .addCase(getTasks.fulfilled, (state, action) => {
         state[action.payload.todoListId] = action.payload.tasks;
       })
