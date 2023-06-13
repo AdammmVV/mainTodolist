@@ -1,9 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { appReducer } from 'app/app.slice';
 import { authReducer } from 'features/auth/auth.slice';
-import { tasksReducer } from 'features/todolist/Tasks/tasks.slice';
+import { tasksReducer } from 'features/tasks/tasks.slice';
 import { todoListReducer } from 'features/todolist/todoList.slice';
-
 
 // store
 export const store = configureStore({
@@ -14,7 +13,6 @@ export const store = configureStore({
     tasks: tasksReducer,
   }
 })
-
 
 // types
 export type AppDispatch = typeof store.dispatch
