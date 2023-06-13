@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios';
-import { FilterType } from 'app/App';
 
 const instance = axios.create({
   baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -36,7 +35,7 @@ export const todoListApi = {
   },
 };
 
-// API Tasks
+// API tasks
 export const tasksApi = {
   getTasks(todoListId: string) {
     return instance
@@ -96,6 +95,7 @@ export const authApi = {
 };
 
 // types
+export type FilterType = 'all' | 'active' | 'completed';
 export type DataRequestLoginType = {
   email: string;
   password: string;
