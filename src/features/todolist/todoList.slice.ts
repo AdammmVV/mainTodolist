@@ -1,9 +1,9 @@
-import { FilterType } from 'app/App';
-import { StatusCode, todoListApi, TodoListDomainType } from 'api/api';
+import { StatusCode, todoListApi, TodoListDomainType, FilterType } from 'api/api';
 import { createAsyncThunk, createSlice, isAnyOf, isFulfilled, isPending, PayloadAction } from '@reduxjs/toolkit';
-import { tasksAction } from 'features/todolist/Tasks/tasks.slice';
+import { tasksAction } from 'features/tasks/tasks.slice';
 import { thunkCatch } from 'common/utils/thunk-catch';
-import { fulfilledEntityStatus, pendingEntityStatus } from './machers';
+import { fulfilledEntityStatus, pendingEntityStatus } from 'features/todolist/constants/machers';
+import { clearAppState } from 'common/actions/cleareAppState.action';
 
 const getTodoList = createAsyncThunk<{ todoLists: TodoListDomainType[] }>(
   'todoList/getTodoList',
@@ -23,7 +23,7 @@ const removeTodoList = createAsyncThunk<{ todoListId: string }, { todoListId: st
     try {
       const res = await todoListApi.removeTodoList(todoListId);
       if (res.resultCode === StatusCode.Ok) {
-        dispatch(tasksAction.clearTasksState({ todoListId }));
+        dispatch(tasksAction.deleteTodoList({ todoListId }));
       } else {
         return rejectWithValue(res.messages[0]);
       }
@@ -80,6 +80,9 @@ const slice = createSlice({
   },
   extraReducers: builder => {
     builder
+      .addCase(clearAppState, () => {
+        return []
+      })
       .addCase(getTodoList.fulfilled, (state, action) => {
         return action.payload.todoLists.map(todo => ({ ...todo, filter: 'all', entityStatus: false }));
       })
