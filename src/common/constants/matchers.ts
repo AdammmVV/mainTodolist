@@ -1,11 +1,11 @@
 import { isFulfilled, isPending, isRejected, isRejectedWithValue } from '@reduxjs/toolkit';
-import { authThunk } from 'features/auth/auth.slice';
+import { authThunks } from 'features/auth/auth.slice';
 import { todoListThunk } from 'features/todolist/todoList.slice';
-import { taskThunk } from 'features/todolist/Tasks/tasks.slice';
+import { taskThunk } from 'features/tasks/tasks.slice';
 
 const pending = isPending(
-  authThunk.logIn,
-  authThunk.logout,
+  authThunks.logIn,
+  authThunks.logout,
   todoListThunk.createTodoList,
   todoListThunk.removeTodoList,
   todoListThunk.getTodoList,
@@ -17,14 +17,14 @@ const pending = isPending(
 );
 
 const pendingInitialized = isPending(
-  authThunk.getMe
+  authThunks.getMe
 );
 
 
 
 const fulfilled = isFulfilled(
-  authThunk.logIn,
-  authThunk.logout,
+  authThunks.logIn,
+  authThunks.logout,
   todoListThunk.createTodoList,
   todoListThunk.removeTodoList,
   todoListThunk.getTodoList,
@@ -37,13 +37,13 @@ const fulfilled = isFulfilled(
 
 
 const fulfilledInitialized = isFulfilled(
-  authThunk.getMe
+  authThunks.getMe
 )
 
 
 const rejectedWithValue = isRejectedWithValue(
-  authThunk.logIn,
-  authThunk.logout,
+  authThunks.logIn,
+  authThunks.logout,
   todoListThunk.createTodoList,
   todoListThunk.removeTodoList,
   todoListThunk.getTodoList,
@@ -55,8 +55,8 @@ const rejectedWithValue = isRejectedWithValue(
 );
 
 const rejected = isRejected(
-  authThunk.logIn,
-  authThunk.logout,
+  authThunks.logIn,
+  authThunks.logout,
   todoListThunk.createTodoList,
   todoListThunk.removeTodoList,
   todoListThunk.getTodoList,
