@@ -7,32 +7,26 @@ import { paths } from 'common/constants/paths';
 import { LoaderApp } from 'common/components/Loaders/loaderApp/LoaderApp';
 import { Header } from 'common/components/Header/Header';
 import LinearProgress from '@mui/material/LinearProgress/LinearProgress';
-import { toast, ToastContainer } from 'react-toastify';
-import { authThunk } from 'features/auth/auth.slice';
 import { todoListThunk } from 'features/todolist/todoList.slice';
-
+import { isAppLoadingSelector, isLoadingSelector } from 'app/app.selectors';
+import { useAuth } from 'features/auth/hooks/useAuth';
+import { AppNotify } from 'common/components/AppNotify/AppNotify';
 
 export const Layout = () => {
+  const { isAuth, onAuth } = useAuth()
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const isAuth = useAppSelector((state) => state.auth.isAuth);
-  const isLoading = useAppSelector(state => state.app.isLoading)
-  const isAppLoading = useAppSelector( state => state.app.isAppLoading)
-  const error = useAppSelector(state => state.app.error)
-  const navigate = useNavigate()
+  const isLoading = useAppSelector(isLoadingSelector)
+  const isAppLoading = useAppSelector( isAppLoadingSelector)
 
   useEffect(() => {
-    dispatch(authThunk.getMe())
     if (!isAuth) {
-      navigate(paths.LOGIN)
+      onAuth()
       return
     }
-    dispatch(todoListThunk.getTodoList());
     navigate(paths.MAIN)
+    dispatch(todoListThunk.getTodoList());
   }, [isAuth, dispatch, navigate]);
-
-  if (error) {
-    toast.success(error)
-  }
 
   return (
     <>
@@ -41,18 +35,7 @@ export const Layout = () => {
       <Container fixed sx={{ p: 10 }}>
         {isAppLoading ? <LoaderApp /> : <Outlet />}
       </Container>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+      <AppNotify/>
     </>
   );
 };
