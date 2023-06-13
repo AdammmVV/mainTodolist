@@ -2,7 +2,7 @@ import { StatusCode, todoListApi, TodoListDomainType, FilterType } from 'api/api
 import { createAsyncThunk, createSlice, isAnyOf, isFulfilled, isPending, PayloadAction } from '@reduxjs/toolkit';
 import { tasksAction } from 'features/tasks/tasks.slice';
 import { thunkCatch } from 'common/utils/thunk-catch';
-import { fulfilledEntityStatus, pendingEntityStatus } from 'features/todolist/constants/machers';
+import { fulfilledEntityStatus, pendingEntityStatus } from 'features/todolist/constants/matchers';
 import { clearAppState } from 'common/actions/cleareAppState.action';
 
 const getTodoList = createAsyncThunk<{ todoLists: TodoListDomainType[] }>(
