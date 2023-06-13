@@ -8,11 +8,11 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useFormik } from 'formik';
-import { useAppDispatch } from 'common/hooks/useAppDispatch';
-import { authThunk } from 'features/auth/auth.slice';
+import { useAuth } from 'features/auth/hooks/useAuth';
+import { CssBaseline } from '@mui/material';
 
 export const Login = () => {
-  const dispatch = useAppDispatch();
+  const {onLogin} = useAuth();
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -36,13 +36,14 @@ export const Login = () => {
       return errors;
     },
     onSubmit: (data) => {
-      dispatch(authThunk.logIn(data));
+      onLogin(data)
       formik.resetForm();
     },
   });
 
   return (
     <Grid container justifyContent={'center'}>
+      <CssBaseline />
       <Grid item justifyContent={'center'}>
         <form onSubmit={formik.handleSubmit}>
           <FormControl>
