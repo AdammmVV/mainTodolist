@@ -44,7 +44,7 @@ const logout = createAppAsyncThunk<void>(
       const res = await authApi.logout();
       if (res.resultCode === StatusCode.Ok) {
         dispatch(getMe());
-        dispatch(clearAppState())
+        dispatch(clearAppState());
       } else {
         return rejectWithValue(res.messages[0]);
       }
