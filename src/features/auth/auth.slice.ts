@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createAppAsyncThunk } from 'common/utils/createAppAsyncThunk';
 import { thunkCatch } from 'common/utils/thunk-catch';
 import { setInfoMessageAction } from 'common/actions/setInfoMessage.action';
-import { clearAppState } from 'common/actions/cleareAppState.action';
+import { clearAppState } from 'common/actions/clearAppState.action';
 
 const initialState = {
   isAuth: false
