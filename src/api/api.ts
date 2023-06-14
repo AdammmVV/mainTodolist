@@ -125,7 +125,7 @@ export type TaskDomainType = {
   description: string;
   title: string;
   completed: boolean;
-  status: number;
+  status: TaskStatuses;
   priority: number;
   startDate: string;
   deadline: string;
