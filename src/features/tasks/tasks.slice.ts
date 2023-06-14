@@ -85,7 +85,7 @@ const updateTask = createAppAsyncThunk<{ todoListId: string, taskId: string, upd
 
 const slice = createSlice({
   name: 'tasks',
-  initialState: {} as TasksStateType,
+  initialState: {} as InitialTasksStateType,
   reducers: {
     deleteTodoList: (state, action: PayloadAction<{ todoListId: string }>) => {
       delete state[action.payload.todoListId];
@@ -126,6 +126,6 @@ export const taskThunk = {
 };
 
 // Types
-export type TasksStateType = {
+export type InitialTasksStateType = {
   [key: string]: TaskDomainType[];
 };
