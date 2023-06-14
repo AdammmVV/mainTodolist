@@ -2,7 +2,7 @@ import { StatusCode, TaskDomainType, TaskModuleType, tasksApi } from 'api/api';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createAppAsyncThunk } from 'common/utils/createAppAsyncThunk';
 import { thunkCatch } from 'common/utils/thunk-catch';
-import { clearAppState } from 'common/actions/cleareAppState.action';
+import { clearAppState } from 'common/actions/clearAppState.action';
 
 const getTasks = createAppAsyncThunk<{ todoListId: string, tasks: TaskDomainType[] },
   { todoListId: string }>(
