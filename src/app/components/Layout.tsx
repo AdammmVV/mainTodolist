@@ -13,29 +13,29 @@ import { useAuth } from 'features/auth/hooks/useAuth';
 import { AppNotify } from 'common/components/AppNotify/AppNotify';
 
 export const Layout = () => {
-  const { isAuth, onAuth } = useAuth()
+  const { isAuth, onAuth } = useAuth();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector(isLoadingSelector)
-  const isAppLoading = useAppSelector( isAppLoadingSelector)
+  const isLoading = useAppSelector(isLoadingSelector);
+  const isAppLoading = useAppSelector(isAppLoadingSelector);
 
   useEffect(() => {
     if (!isAuth) {
-      onAuth()
-      return
+      onAuth();
+      return;
     }
-    navigate(paths.MAIN)
+    navigate(paths.MAIN);
     dispatch(todoListThunk.getTodoList());
   }, [isAuth, dispatch, navigate]);
 
   return (
     <>
       <Header />
-      { isLoading && <LinearProgress />}
+      {isLoading && <LinearProgress />}
       <Container fixed sx={{ p: 10 }}>
         {isAppLoading ? <LoaderApp /> : <Outlet />}
       </Container>
-      <AppNotify/>
+      <AppNotify />
     </>
   );
 };
