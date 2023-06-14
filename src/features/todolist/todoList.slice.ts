@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice, isAnyOf, isFulfilled, isPending, Payload
 import { tasksAction } from 'features/tasks/tasks.slice';
 import { thunkCatch } from 'common/utils/thunk-catch';
 import { fulfilledEntityStatus, pendingEntityStatus } from 'features/todolist/constants/matchers';
-import { clearAppState } from 'common/actions/cleareAppState.action';
+import { clearAppState } from 'common/actions/clearAppState.action';
 
 const getTodoList = createAsyncThunk<{ todoLists: TodoListDomainType[] }>(
   'todoList/getTodoList',
