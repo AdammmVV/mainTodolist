@@ -67,7 +67,7 @@ const updateTodolist = createAsyncThunk<{ todoListId: string, title: string }, {
 
 const slice = createSlice({
   name: 'todoList',
-  initialState: [] as TodoListDomainType[],
+  initialState: [] as InitialTodolistStateType[],
   reducers: {
     setTasksFilter: (state, action: PayloadAction<{ todoListId: string, filter: FilterType }>) => {
       const index = state.findIndex(todo => todo.id === action.payload.todoListId);
@@ -91,7 +91,7 @@ const slice = createSlice({
         if (index !== -1) state.splice(index, 1);
       })
       .addCase(createTodoList.fulfilled, (state, action) => {
-        state.unshift(action.payload.todoList);
+        state.unshift({...action.payload.todoList, filter: 'all', entityStatus: false});
       })
       .addCase(updateTodolist.fulfilled, (state, action) => {
         const index = state.findIndex(todo => todo.id === action.payload.todoListId);
@@ -120,5 +120,5 @@ export const todoListThunk = {
 };
 
 // Types
-export type TodolistType = TodoListDomainType & { filter: FilterType, entityStatus: boolean };
+export type InitialTodolistStateType = TodoListDomainType & { filter: FilterType, entityStatus: boolean };
 
