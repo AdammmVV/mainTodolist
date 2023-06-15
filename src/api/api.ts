@@ -107,8 +107,6 @@ export type TodoListDomainType = {
   title: string;
   addedDate: string;
   order: number;
-  filter: FilterType;
-  entityStatus: boolean;
 };
 type CommonResponseType<T = {}> = {
   resultCode: number;
