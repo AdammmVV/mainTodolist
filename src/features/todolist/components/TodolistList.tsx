@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { CssBaseline, Grid, Paper } from '@mui/material';
 import { Todolist } from 'features/todolist/components/TodoList/Todolist';
 import { AddItemForm } from 'common/components/AddItemForm/AddItemForm';
@@ -12,6 +12,10 @@ export const TodolistList = () => {
   const todoLists = useAppSelector(todoListSelector);
   const isLoading = useAppSelector( isLoadingSelector)
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(todoListThunk.getTodoList())
+  }, [dispatch])
 
   const createTodoList = useCallback(
     (title: string) => {
