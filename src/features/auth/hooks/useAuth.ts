@@ -16,9 +16,5 @@ export const useAuth = () => {
   const onLogin = (data: { email: string, password: string, rememberMe: boolean }) =>
     dispatch(authThunks.logIn(data)).unwrap().then(() => navigate(paths.MAIN));
 
-  const onAuth = () => {
-    dispatch(authThunks.getMe()).unwrap().catch(()=>navigate(paths.LOGIN))
-  }
-
-  return { isAuth, onAuth, onLogout, onLogin };
+  return { isAuth, onLogout, onLogin };
 };
