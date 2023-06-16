@@ -8,6 +8,7 @@ import {
 } from 'common/constants/matchers';
 import { setInfoMessageAction } from 'common/actions/setInfoMessage.action';
 import { clearNotifyState } from 'common/actions/clearNotifyState.action';
+import { authThunks } from 'features/auth/auth.slice';
 
 const initialState = {
   isAppLoading: false,
@@ -42,6 +43,9 @@ const slice = createSlice({
       .addCase(clearNotifyState, state => {
         state.error = null
         state.infoMessage = null
+      })
+      .addCase(authThunks.getMe.rejected, state => {
+        state.isAppLoading = false
       })
       .addMatcher(pendingInitialized, state => {
         state.isAppLoading = true;
