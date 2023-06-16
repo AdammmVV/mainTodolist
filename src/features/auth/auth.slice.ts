@@ -11,13 +11,14 @@ const initialState = {
 
 const getMe = createAppAsyncThunk<void>(
   'auth/getMe',
-  async (data, { dispatch }) => {
+  async (data, { dispatch, rejectWithValue }) => {
     const res = await authApi.getMe();
     if (res.resultCode === StatusCode.Ok) {
       dispatch(setIsAuth({ isAuth: true }));
       dispatch(setInfoMessageAction({ infoMessage: `Hello ${res.data.login}` }));
     } else {
       dispatch(setIsAuth({ isAuth: false }));
+      return rejectWithValue(res.messages[0])
     }
   }
 );
