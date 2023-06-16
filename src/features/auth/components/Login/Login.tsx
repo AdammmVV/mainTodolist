@@ -28,11 +28,11 @@ export const Login = () => {
       ) {
         errors.email = 'Invalid email address';
       }
-      if (!values.password) {
-        errors.password = 'Required';
-      } else if (values.password.length < 7) {
-        errors.password = 'Сan`not be less than 7';
-      }
+      // if (!values.password) {
+      //   errors.password = 'Required';
+      // } else if (values.password.length < 7) {
+      //   errors.password = 'Сan`not be less than 7';
+      // }
       return errors;
     },
     onSubmit: (data) => {
